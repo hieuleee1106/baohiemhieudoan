@@ -1,39 +1,25 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendEmail = async (options) => {
-  // Thêm bước kiểm tra các biến môi trường để debug dễ hơn
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.error("LỖI CẤU HÌNH: Vui lòng kiểm tra các biến EMAIL_USER và EMAIL_PASS trong tệp .env của bạn.");
-    throw new Error("Lỗi cấu hình máy chủ email. Kiểm tra console của backend để biết thêm chi tiết.");
+  if (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_SENDER) {
+    console.error("Lỗi cấu hình: Kiểm tra SENDGRID_API_KEY và SENDGRID_SENDER trong .env");
+    throw new Error("Cấu hình email chưa đúng");
   }
 
-  // 1. Tạo một transporter (đối tượng chịu trách nhiệm gửi mail)
-  // Ở đây chúng ta dùng Gmail làm ví dụ.
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    // Cổng 465 yêu cầu secure: true. Các cổng khác (như 587) dùng secure: false.
-    secure: process.env.EMAIL_PORT === '465', 
-    auth: {
-      user: process.env.EMAIL_USER, // email của bạn
-      pass: process.env.EMAIL_PASS, // mật khẩu ứng dụng của bạn
-    },
-  });
-
-  // 2. Định nghĩa các tùy chọn cho email
-  const mailOptions = {
-    from: '"HieuShop" <no-reply@hieushop.com>', // Tên và địa chỉ người gửi
-    to: options.email, // Địa chỉ người nhận
-    subject: options.subject, // Tiêu đề email
-    html: options.html, // Nội dung email dạng HTML
+  const msg = {
+    to: options.email, // người nhận
+    from: process.env.SENDGRID_SENDER, // email đã verify
+    subject: options.subject,
+    html: options.html,
   };
 
-  // 3. Gửi email
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Message sent: %s', info.messageId);
+    const info = await sgMail.send(msg);
+    console.log("Email sent successfully:", info);
   } catch (error) {
-    console.error("Error sending email: ", error);
+    console.error("Error sending email:", error);
     throw new Error("Không thể gửi email, vui lòng thử lại sau.");
   }
 };
