@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../pages/AuthContext';
+import Button from './Button';
 
 const AdminSidebar = () => {
   const { logout } = useAuth();
@@ -16,22 +17,26 @@ const AdminSidebar = () => {
   const baseLinkClass = "group flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 font-medium text-sm relative overflow-hidden";
 
   // Hàm tạo class dựa trên trạng thái active
-  const getNavLinkClass = ({ isActive }) => {
-    return isActive
-      ? `${baseLinkClass} bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/30 translate-x-1`
-      : `${baseLinkClass} text-slate-500 hover:bg-slate-50 hover:text-purple-600 hover:translate-x-1`;
-  };
+ const getNavLinkClass = ({ isActive }) => {
+  return isActive
+    ? `${baseLinkClass} bg-gradient-to-r from-red-600 to-red-400 text-white shadow-lg shadow-red-500/30 translate-x-1`
+    : `${baseLinkClass} text-slate-500 hover:bg-red-50 hover:text-red-600 hover:translate-x-1`;
+};
+
 
   return (
     <aside className="w-72 flex-shrink-0 flex flex-col gap-6">
       <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-5 flex flex-col h-full min-h-[calc(100vh-6rem)] sticky top-24">
         
         {/* Header */}
-        <div className="mb-8 px-2">
-           <h2 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 tracking-tight">
-             Admin Panel
-           </h2>
-           <p className="text-xs text-slate-400 mt-1 font-semibold tracking-wider uppercase">Hệ thống quản trị</p>
+        <div className="mb-8 px-2 flex items-center gap-3">
+           {/* Logo giả lập bằng icon */}
+           <img src="/logo.png" alt="HieuShop Logo" className="h-10 w-auto object-contain" />
+           <div>
+             <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-red-500 tracking-tight leading-tight">
+               HieuShop
+             </h2>
+           </div>
         </div>
 
         {/* Navigation */}
@@ -88,15 +93,16 @@ const AdminSidebar = () => {
 
         {/* Logout Button */}
         <div className="mt-auto pt-6 border-t border-slate-100">
-          <button
+          <Button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 rounded-xl hover:bg-red-50 hover:text-red-600 transition-all duration-200 font-medium text-sm group"
+            variant="subtle"
+            className="w-full !justify-start hover:!bg-red-50 hover:!text-red-600 group"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
             <span>Đăng xuất</span>
-          </button>
+          </Button>
         </div>
       </div>
     </aside>

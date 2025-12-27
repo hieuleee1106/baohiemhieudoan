@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useAuth } from './AuthContext';
-
+import Button from '../components/Button';
+import Chatbox from '../components/Chatbox';
 const ClaimRequestPage = () => {
   const [contracts, setContracts] = useState([]);
   const [selectedContractId, setSelectedContractId] = useState('');
@@ -165,13 +166,14 @@ const ClaimRequestPage = () => {
                 )}
               </div>
 
-              <button 
+              <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-70 disabled:scale-100"
+                variant="slide-purple"
+                className="w-full"
               >
                 {isSubmitting ? 'Đang gửi yêu cầu...' : 'Gửi Yêu Cầu Chi Trả'}
-              </button>
+              </Button>
             </form>
           )}
         </div>
@@ -208,6 +210,7 @@ const ClaimRequestPage = () => {
         )}
       </main>
       <Footer />
+      <Chatbox />
     </div>
   );
 };

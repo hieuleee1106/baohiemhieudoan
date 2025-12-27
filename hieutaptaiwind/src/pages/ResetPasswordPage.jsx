@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import Button from '../components/Button';
 
 const ResetPasswordPage = () => {
   const { token } = useParams();
@@ -40,10 +41,10 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-800">Đặt Lại Mật Khẩu</h1>
+    <div className="min-h-screen flex items-center justify-center bg-red-50/30 p-4 relative overflow-hidden">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-red-100 p-8 relative z-10 border border-red-50">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-extrabold text-slate-900">Đặt Lại Mật Khẩu</h1>
           <p className="text-slate-500 mt-2">Nhập mật khẩu mới cho tài khoản của bạn.</p>
         </div>
         <form onSubmit={handleSubmit}>
@@ -54,7 +55,7 @@ const ResetPasswordPage = () => {
             placeholder="Mật khẩu mới"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
             required
           />
           <input
@@ -62,12 +63,12 @@ const ResetPasswordPage = () => {
             placeholder="Xác nhận mật khẩu mới"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-6"
             required
           />
-          <button type="submit" className="w-full bg-linear-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-lg hover:scale-105 transition-transform">
+          <Button type="submit" variant="slide-red" className="w-full shadow-lg shadow-red-500/30">
             Lưu Mật Khẩu Mới
-          </button>
+          </Button>
         </form>
       </div>
     </div>

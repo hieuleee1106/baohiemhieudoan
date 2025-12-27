@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../pages/AuthContext';
-import ConfirmModal from './ConfirmModal'; // Import modal xác nhận
+import Button from './Button';
+import ConfirmModal from './ConfirmModal';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true); // Bắt đầu với trạng thái loading
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { user: loggedInUser, loading: authLoading, showNotification } = useAuth(); // Đổi tên để tránh nhầm lẫn
-  
-  // State cho modal xác nhận xóa
+  const [filterRole, setFilterRole] = useState('Tất cả');
+  const { user: loggedInUser, loading: authLoading, showNotification } = useAuth();
+
+  // State modal xóa
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false); // Thêm state cho trạng thái loading khi xóa
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fetch users
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('hieushop-token');
@@ -29,62 +33,58 @@ const UserManagement = () => {
   };
 
   useEffect(() => {
-    // Chỉ fetch users khi AuthContext đã load xong và user là admin
     if (!authLoading && loggedInUser?.role === 'admin') {
       fetchUsers();
     } else if (!authLoading) {
-      // Nếu xác thực xong nhưng không phải admin, dừng loading và không làm gì
       setLoading(false);
     }
-  }, [loggedInUser, authLoading]); // Thêm user và authLoading vào dependency array
+  }, [loggedInUser, authLoading]);
 
-  // Hàm mở modal và set user cần xóa
+  // Modal xóa
   const openDeleteModal = (user) => {
     setUserToDelete(user);
     setIsModalOpen(true);
   };
-  
-  // Hàm đóng modal
+
   const closeDeleteModal = () => {
     setUserToDelete(null);
     setIsModalOpen(false);
   };
-  
-  // Hàm thực hiện xóa sau khi xác nhận
+
   const confirmDeleteUser = async () => {
     if (!userToDelete) return;
-    setIsDeleting(true); // Bắt đầu loading
-    
+    setIsDeleting(true);
+
     try {
       const token = localStorage.getItem('hieushop-token');
       const res = await fetch(`/api/auth/users/${userToDelete._id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` },
       });
-      
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Xóa người dùng thất bại.');
-      
+
       showNotification('Người dùng đã được xóa thành công.');
-      fetchUsers(); // Tải lại danh sách người dùng
-      closeDeleteModal(); // Đóng modal
+      fetchUsers();
+      closeDeleteModal();
     } catch (err) {
       showNotification(err.message, 'error');
       closeDeleteModal();
     } finally {
-      setIsDeleting(false); // Dừng loading
+      setIsDeleting(false);
     }
   };
 
-  // Hiển thị loading chỉ khi auth đang load hoặc component đang fetch
-  if (loading) {
-    return <p>Đang tải danh sách người dùng...</p>;
-  }
-
+  if (loading) return <p>Đang tải danh sách người dùng...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
+  const filteredUsers = users.filter(user =>
+    filterRole === 'Tất cả' ? true : user.role === filterRole
+  );
+
   return (
-    <div>
+    <div className="bg-white rounded-xl shadow-lg p-8">
       <ConfirmModal
         isOpen={isModalOpen}
         onClose={closeDeleteModal}
@@ -95,29 +95,47 @@ const UserManagement = () => {
       >
         Bạn có chắc chắn muốn xóa người dùng <strong>{userToDelete?.name}</strong>? Hành động này không thể hoàn tác.
       </ConfirmModal>
-      <h1 className="text-3xl font-bold mb-6 text-slate-800">Quản lý người dùng</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead className="bg-slate-100">
+
+      <h1 className="text-3xl font-bold text-slate-800 mb-6">Quản lý người dùng</h1>
+
+      <div className="overflow-x-auto bg-white rounded-xl shadow-md border border-slate-100">
+        <table className="min-w-full">
+          <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Tên</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Email</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Vai trò</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Hành động</th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Tên</th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Email</th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <span>Vai trò</span>
+                  <select
+                    value={filterRole}
+                    onChange={(e) => setFilterRole(e.target.value)}
+                    className="sm:ml-2 px-2 py-1 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-purple-500 focus:outline-none bg-white text-slate-700 shadow-sm cursor-pointer"
+                  >
+                    <option value="Tất cả">Tất cả</option>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
-              <tr key={user._id} className="border-b border-slate-200 hover:bg-slate-50">
-                <td className="py-3 px-4">{user.name}</td>
-                <td className="py-3 px-4">{user.email}</td>
-                <td className="py-3 px-4"><span className={`px-2 py-1 text-xs font-semibold rounded-full ${user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}>{user.role}</span></td>
-                <td className="py-3 px-4">
-                  
+            {filteredUsers.map(user => (
+              <tr key={user._id} className="odd:bg-white even:bg-slate-50/50 hover:bg-purple-50/50 transition-colors">
+                <td className="py-4 px-6 font-medium text-slate-800 whitespace-nowrap">{user.name}</td>
+                <td className="py-4 px-6 text-slate-600 whitespace-nowrap">{user.email}</td>
+                <td className="py-4 px-6 whitespace-nowrap">
+                  <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}>
+                    {user.role}
+                  </span>
+                </td>
+                <td className="py-4 px-6 whitespace-nowrap">
                   {loggedInUser._id !== user._id && user.role !== 'admin' && (
-                    <button onClick={() => openDeleteModal(user)} className="text-red-600 hover:text-red-800 font-semibold disabled:text-slate-400 disabled:cursor-not-allowed">
+                    <Button variant="slide-red" size="sm" onClick={() => openDeleteModal(user)}>
                       Xóa
-                    </button>
+                    </Button>
                   )}
                 </td>
               </tr>

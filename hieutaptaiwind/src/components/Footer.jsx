@@ -9,7 +9,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-b from-sky-50 to-white text-slate-700 font-sans border-t border-sky-100">
+    <footer className="bg-black text-white font-sans border-t border-slate-800">
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           
@@ -23,7 +23,7 @@ const Footer = () => {
               />
             </Link>
 
-            <p className="text-sm leading-relaxed text-slate-600">
+            <p className="text-sm leading-relaxed text-slate-400">
               Hiếu Daiichi đồng hành cùng bạn trong hành trình bảo vệ tài chính,
               sức khỏe và tương lai gia đình bằng những giải pháp bảo hiểm phù hợp
               và minh bạch.
@@ -43,7 +43,7 @@ const Footer = () => {
 
           {/* Links */}
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-5">
+            <h3 className="text-lg font-semibold text-white mb-5">
               Liên kết nhanh
             </h3>
             <ul className="space-y-3">
@@ -56,7 +56,7 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-5">
+            <h3 className="text-lg font-semibold text-white mb-5">
               Thông tin liên hệ
             </h3>
 
@@ -78,15 +78,15 @@ const Footer = () => {
             </ul>
 
             {/* Consultant */}
-            <div className="mt-6 flex items-center gap-4 bg-emerald-50 p-4 rounded-xl">
+            <div className="mt-6 flex items-center gap-4 p-4 rounded-xl">
               <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold">
                 H
               </div>
               <div>
-                <p className="text-xs text-emerald-600 font-semibold uppercase">
+                <p className="text-xs text-emerald-400 font-semibold uppercase">
                   Chủ tịch
                 </p>
-                <p className="text-slate-900 font-semibold">
+                <p className="text-white font-semibold">
                   Đoàn Trung Hiếu
                 </p>
               </div>
@@ -95,11 +95,11 @@ const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="mt-14 pt-6 border-t border-sky-100 flex flex-col md:flex-row items-center text-sm text-slate-500 gap-4">
+        <div className="mt-14 pt-6 border-t border-slate-800 flex flex-col md:flex-row items-center text-sm text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} Hiếu Daiichi</p>
           <div className="flex gap-5">
-            <a href="https://dai-ichi-life.com.vn/quy-dinh-27/quy-dinh-va-dieu-khoan-su-dung-1094" className="hover:text-emerald-600">Điều khoản</a>
-            <a href="https://dai-ichi-life.com.vn/quy-dinh-27/chinh-sach-bao-mat-35" className="hover:text-emerald-600">Bảo mật</a>
+            <a href="https://dai-ichi-life.com.vn/quy-dinh-27/quy-dinh-va-dieu-khoan-su-dung-1094" className="hover:text-emerald-400">Điều khoản</a>
+            <a href="https://dai-ichi-life.com.vn/quy-dinh-27/chinh-sach-bao-mat-35" className="hover:text-emerald-400">Bảo mật</a>
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ const SocialLink = ({ href, icon }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition"
+    className="w-9 h-9 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition"
   >
     {icon}
   </a>
@@ -124,7 +124,7 @@ const FooterLink = ({ to, text }) => (
   <li>
     <Link
       to={to}
-      className="text-slate-600 hover:text-emerald-600 transition"
+      className="text-slate-400 hover:text-emerald-400 transition"
     >
       {text}
     </Link>
@@ -132,10 +132,10 @@ const FooterLink = ({ to, text }) => (
 );
 
 const ContactItem = ({ icon, text, href }) => (
-  <li className="flex items-center gap-3 text-slate-600">
+  <li className="flex items-center gap-3 text-slate-400">
     <span className="text-emerald-500">{icon}</span>
     {href ? (
-      <a href={href} className="hover:text-emerald-600 transition">
+      <a href={href} className="hover:text-emerald-400 transition">
         {text}
       </a>
     ) : (

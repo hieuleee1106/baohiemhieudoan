@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import Button from "../components/Button";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "", phone: "" });
@@ -61,12 +62,15 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <div className="absolute inset-0 opacity-5" style={{backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"}}></div>
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl shadow-purple-200/50 p-8 relative">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold tracking-tight">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Tạo</span> Tài Khoản
+    <div className="min-h-screen flex items-center justify-center bg-red-50/30 p-4 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-red-100 p-8 relative z-10 border border-red-50">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">
+            Tạo <span className="text-red-600">Tài Khoản</span>
           </h1>
           <p className="text-slate-500 mt-2">Bắt đầu hành trình của bạn với HieuShop</p>
         </div>
@@ -77,7 +81,7 @@ const RegisterPage = () => {
             placeholder="Tên của bạn"
             value={name}
             onChange={handleChange}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+            className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
             required
           />
           <input
@@ -86,7 +90,7 @@ const RegisterPage = () => {
             placeholder="Email"
             value={email}
             onChange={handleChange}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+            className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
             required
           />
           {errors.email && <p className="text-red-500 text-xs italic -mt-2 mb-4">{errors.email}</p>}
@@ -96,7 +100,7 @@ const RegisterPage = () => {
             placeholder="Số điện thoại (không bắt buộc)"
             value={phone}
             onChange={handleChange}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+            className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
           />
           <input
             type="password"
@@ -104,7 +108,7 @@ const RegisterPage = () => {
             placeholder="Mật khẩu"
             value={password}
             onChange={handleChange}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+            className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
             required
           />
           {errors.password && <p className="text-red-500 text-xs italic -mt-2 mb-4">{errors.password}</p>}
@@ -114,20 +118,21 @@ const RegisterPage = () => {
             placeholder="Xác nhận mật khẩu"
             value={confirmPassword}
             onChange={handleChange}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+            className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-6"
             required
           />
           {errors.confirmPassword && <p className="text-red-500 text-xs italic -mt-2 mb-4">{errors.confirmPassword}</p>}
           {errors.general && <p className="text-red-500 text-xs italic mb-4">{errors.general}</p>}
-          <button
+          <Button
             type="submit"
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-lg transition-transform transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/40"
+            variant="slide-red"
+            className="w-full shadow-lg shadow-red-500/30"
           >
             Đăng ký
-          </button>
+          </Button>
           <div className="mt-4 text-center">
             <p className="text-slate-500">Đã có tài khoản?{" "}
-              <Link to="/login" className="text-purple-600 hover:underline font-medium">
+              <Link to="/login" className="text-red-600 hover:underline font-medium">
                 Đăng nhập
               </Link>
             </p>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../pages/AuthContext'; // Import useAuth để lấy thông tin người dùng
+import Button from './Button';
 import ConfirmModal from './ConfirmModal';
 
 const MyContracts = () => {
@@ -15,6 +16,7 @@ const MyContracts = () => {
   const [isSubmittingCancel, setIsSubmittingCancel] = useState(false);
   const [expandedContractId, setExpandedContractId] = useState(null); // State để quản lý việc mở rộng/thu gọn
   const [filterStatus, setFilterStatus] = useState('Tất cả'); // State cho bộ lọc
+  const [pollingContractId, setPollingContractId] = useState(null); // State theo dõi hợp đồng đang thanh toán
 
   // Thêm trạng thái mới để tương thích với backend
   const statusStyles = {
@@ -46,35 +48,79 @@ const MyContracts = () => {
     fetchMyContracts();
   }, []);
 
-  // Cập nhật hàm handlePayment để gọi API tạo URL của VNPay
-  const handlePayment = async (contract) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn tiến hành thanh toán số tiền ${contract.premium.toLocaleString('vi-VN')} ₫ cho hợp đồng này không?`)) return;
-
-    const token = localStorage.getItem('hieushop-token');
+  // Hàm xử lý thanh toán ZaloPay Test
+  const handleZaloPayPayment = async (contract) => {
     try {
-      // Gọi API để tạo URL thanh toán
-      const res = await fetch(`/api/payment/create_payment_url`, {
+      const res = await fetch('/api/payment/zalopay-test', {
         method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${token}`,
+        headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          contractId: contract._id,
-          amount: contract.premium,
-          language: 'vn'
-        })
+        body: JSON.stringify({ amount: contract.premium, contractNumber: contract.contractNumber }),
       });
-
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Không thể tạo yêu cầu thanh toán.');
 
-      // Chuyển hướng người dùng đến cổng thanh toán VNPay
-      window.location.href = data.paymentUrl;
+      if (data.return_code === 1 && data.order_url) {
+        window.open(data.order_url, '_blank');
+        setPollingContractId(contract._id); // Bắt đầu tự động kiểm tra trạng thái
+      } else {
+        showNotification('Không thể tạo đơn hàng ZaloPay: ' + (data.return_message || 'Lỗi không xác định'), 'error');
+      }
     } catch (err) {
-      showNotification(err.message, 'error'); // Hiển thị lỗi nếu có
+      showNotification('Lỗi kết nối thanh toán: ' + err.message, 'error');
     }
   };
+
+  // Hàm kiểm tra trạng thái giao dịch (Dùng khi callback không hoạt động trên localhost)
+  const handleCheckStatus = async (contract, isPolling = false) => {
+    try {
+      const res = await fetch('/api/payment/check-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ contractNumber: contract.contractNumber }),
+      });
+      const data = await res.json();
+
+      if (data.return_code === 1) {
+        showNotification('Thanh toán thành công! Hợp đồng đã được kích hoạt.');
+        fetchMyContracts();
+        return true;
+      } else {
+        if (!isPolling) {
+          showNotification('Trạng thái: ' + (data.return_message || 'Chưa thanh toán'), 'info');
+        }
+        return false;
+      }
+    } catch (err) {
+      if (!isPolling) {
+        showNotification('Lỗi kiểm tra trạng thái: ' + err.message, 'error');
+      }
+      return false;
+    }
+  };
+
+  // Effect để tự động kiểm tra trạng thái khi đang thanh toán
+  useEffect(() => {
+    let interval;
+    if (pollingContractId) {
+      const contract = contracts.find(c => c._id === pollingContractId);
+      // Nếu không tìm thấy hoặc trạng thái đã đổi (đã thanh toán xong), dừng polling
+      if (!contract || contract.status !== 'Chờ thanh toán') {
+        setPollingContractId(null);
+        return;
+      }
+
+      interval = setInterval(async () => {
+        const success = await handleCheckStatus(contract, true);
+        if (success) {
+          setPollingContractId(null);
+        }
+      }, 5000); // Kiểm tra mỗi 5 giây
+    }
+    return () => clearInterval(interval);
+  }, [pollingContractId, contracts]);
 
   // Mở modal yêu cầu hủy
   const openCancelModal = (contractId) => {
@@ -240,22 +286,23 @@ const MyContracts = () => {
                     <div className="mt-6 pt-4 border-t border-slate-200 flex justify-end gap-4">
 
               {contract.status === 'Chờ thanh toán' && (
-                  <button 
-                    onClick={() => handlePayment(contract)}
-                    className="w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-sm hover:shadow-md"
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                  <Button
+                    onClick={() => handleZaloPayPayment(contract)} 
+                    variant="slide-blue"
+                    className="flex-1 whitespace-nowrap"
                   >
-                    Thanh toán ngay
-                  </button>
+                    Thanh toán ZaloPay
+                  </Button>
+                </div>
               )}
 
-              {/* Nút yêu cầu hủy: Chỉ hiện khi Hiệu lực và chưa có yêu cầu đang chờ */}
               {contract.status === 'Hiệu lực' && (!contract.cancellation?.isRequested || contract.cancellation?.status === 'Từ chối') && (
-                <button
+                <Button variant="slide-red" size="sm"
                   onClick={() => openCancelModal(contract._id)}
-                  className="text-red-600 hover:text-red-800 font-semibold text-sm underline"
                 >
                   Yêu cầu hủy hợp đồng
-                </button>
+                </Button>
               )}
                     </div>
                   </div>

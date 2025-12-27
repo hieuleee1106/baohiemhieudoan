@@ -1,22 +1,24 @@
 import { useState, useEffect } from 'react';
 import ProductFormModal from './ProductFormModal';
+import Button from './Button';
 import { useAuth } from '../pages/AuthContext';
-import ConfirmModal from './ConfirmModal'; // Import modal xác nhận
+import ConfirmModal from './ConfirmModal';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [filterCategory, setFilterCategory] = useState('Tất cả');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const { user, loading: authLoading, showNotification } = useAuth();
 
-  // State cho modal xóa sản phẩm
+  // Modal xóa
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Hàm fetch sản phẩm
+  // Fetch products
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -39,6 +41,7 @@ const ProductManagement = () => {
     }
   }, [user, authLoading]);
 
+  // Modal thêm/sửa sản phẩm
   const handleOpenModal = (product = null) => {
     setCurrentProduct(product);
     setIsModalOpen(true);
@@ -50,24 +53,21 @@ const ProductManagement = () => {
   };
 
   const handleSave = () => {
-    // Sau khi lưu thành công, đóng modal và tải lại danh sách
     handleCloseModal();
     fetchProducts();
   };
 
-  // Mở modal xác nhận xóa
+  // Modal xóa
   const openDeleteModal = (product) => {
     setProductToDelete(product);
     setIsDeleteModalOpen(true);
   };
 
-  // Đóng modal xác nhận xóa
   const closeDeleteModal = () => {
     setProductToDelete(null);
     setIsDeleteModalOpen(false);
   };
 
-  // Thực hiện xóa sản phẩm sau khi xác nhận
   const confirmDeleteProduct = async () => {
     if (!productToDelete) return;
     setIsDeleting(true);
@@ -81,7 +81,7 @@ const ProductManagement = () => {
       if (!res.ok) throw new Error(data.message || 'Xóa sản phẩm thất bại.');
 
       showNotification('Sản phẩm đã được xóa thành công.');
-      fetchProducts(); // Tải lại danh sách sau khi xóa thành công
+      fetchProducts();
     } catch (err) {
       showNotification(err.message, 'error');
     } finally {
@@ -90,20 +90,22 @@ const ProductManagement = () => {
     }
   };
 
-  // Hiển thị loading trong khi xác thực hoặc fetch dữ liệu
   if (authLoading || loading) return <p>Đang tải dữ liệu sản phẩm...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
+  const categories = ['Tất cả', ...new Set(products.map(p => p.category))];
+  const filteredProducts = products.filter(p =>
+    filterCategory === 'Tất cả' ? true : p.category === filterCategory
+  );
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-slate-800">Quản lý Sản phẩm (Bảo hiểm)</h1>
-        <button
-          onClick={() => handleOpenModal()}
-          className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-        >
+    <div className="bg-white rounded-xl shadow-lg p-8">
+      <h1 className="text-3xl font-bold text-slate-800 mb-6">Quản lý Sản phẩm (Bảo hiểm)</h1>
+
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        <Button variant="slide-purple" size="sm" onClick={() => handleOpenModal()}>
           Thêm sản phẩm mới
-        </button>
+        </Button>
       </div>
 
       <ConfirmModal
@@ -117,37 +119,42 @@ const ProductManagement = () => {
         Bạn có chắc chắn muốn xóa sản phẩm <strong>{productToDelete?.name}</strong>? Hành động này không thể hoàn tác.
       </ConfirmModal>
 
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+      <div className="overflow-x-auto bg-white rounded-xl shadow-md border border-slate-100">
         <table className="min-w-full">
-          <thead className="bg-slate-100">
+          <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Tên sản phẩm</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Nhà cung cấp</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Loại hình</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Phí (năm)</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Hành động</th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Tên sản phẩm</th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Nhà cung cấp</th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <span>Loại hình</span>
+                  <select
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                    className="sm:ml-2 px-2 py-1 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-purple-500 focus:outline-none bg-white text-slate-700 shadow-sm cursor-pointer"
+                  >
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+              </th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Phí (năm)</th>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product._id} className="border-b border-slate-200 hover:bg-slate-50">
-                <td className="py-3 px-4 font-medium">{product.name}</td>
-                <td className="py-3 px-4">{product.provider}</td>
-                <td className="py-3 px-4">{product.category}</td>
-                <td className="py-3 px-4">{product.price.toLocaleString('vi-VN')} ₫</td>
-                <td className="py-3 px-4">
-                  <button
-                    onClick={() => handleOpenModal(product)}
-                    className="text-purple-600 hover:text-purple-800 font-semibold"
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal(product)}
-                    className="text-red-600 hover:text-red-800 font-semibold ml-4"
-                  >
-                    Xóa
-                  </button>
+            {filteredProducts.map(product => (
+              <tr key={product._id} className="odd:bg-white even:bg-slate-50/50 hover:bg-purple-50/50 transition-colors">
+                <td className="py-4 px-6 font-medium text-slate-800 whitespace-nowrap">{product.name}</td>
+                <td className="py-4 px-6 text-slate-600 whitespace-nowrap">{product.provider}</td>
+                <td className="py-4 px-6 text-slate-600 whitespace-nowrap">{product.category}</td>
+                <td className="py-4 px-6 text-slate-800 font-medium whitespace-nowrap">{product.price.toLocaleString('vi-VN')} ₫</td>
+                <td className="py-4 px-6 whitespace-nowrap">
+                  <div className="flex gap-2">
+                    <Button variant="slide" size="sm" onClick={() => handleOpenModal(product)}>Sửa</Button>
+                    <Button variant="slide-red" size="sm" onClick={() => openDeleteModal(product)}>Xóa</Button>
+                  </div>
                 </td>
               </tr>
             ))}

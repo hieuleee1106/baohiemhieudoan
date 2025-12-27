@@ -20,6 +20,11 @@ const Button = ({
     secondary: 'bg-slate-200 text-slate-800 hover:bg-slate-300',
     danger: 'bg-red-500 text-white hover:bg-red-600',
     subtle: 'bg-slate-100 text-slate-700 hover:bg-slate-200',
+    slide: 'group relative overflow-hidden bg-white text-slate-900 shadow hover:shadow-md',
+    'slide-red': 'group relative overflow-hidden bg-white text-slate-900 shadow hover:shadow-md',
+    'slide-purple': 'group relative overflow-hidden bg-white text-slate-900 shadow hover:shadow-md',
+    'slide-green': 'group relative overflow-hidden bg-white text-slate-900 shadow hover:shadow-md',
+    'slide-blue': 'group relative overflow-hidden bg-white text-slate-900 shadow hover:shadow-md',
   };
 
   const sizeStyles = {
@@ -30,11 +35,26 @@ const Button = ({
 
   const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
 
+  const isSlide = variant.startsWith('slide');
+  
+  let slideColor = 'bg-amber-400';
+  if (variant === 'slide-red') slideColor = 'bg-red-600';
+  if (variant === 'slide-purple') slideColor = 'bg-purple-600';
+  if (variant === 'slide-green') slideColor = 'bg-green-600';
+  if (variant === 'slide-blue') slideColor = 'bg-blue-600';
+
+  const content = isSlide ? (
+    <>
+      <div className={`absolute inset-0 w-3 ${slideColor} transition-all duration-250 ease-out group-hover:w-full`}></div>
+      <span className="relative group-hover:text-white flex items-center justify-center gap-2 w-full">{children}</span>
+    </>
+  ) : children;
+
   if (as === 'link') {
-    return <Link to={to} className={combinedClassName} {...props}>{children}</Link>;
+    return <Link to={to} className={combinedClassName} {...props}>{content}</Link>;
   }
 
-  return <button type={type} onClick={onClick} disabled={disabled} className={combinedClassName} {...props}>{children}</button>;
+  return <button type={type} onClick={onClick} disabled={disabled} className={combinedClassName} {...props}>{content}</button>;
 };
 
 export default Button;

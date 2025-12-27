@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MyApplications from '../components/MyApplications'; // Import component mới
 import ConfirmModal from '../components/ConfirmModal';
+import Button from '../components/Button';
 
 const ProfilePage = () => {
   const { user, logout, updateUser, showNotification } = useAuth();
@@ -165,8 +166,8 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className="flex gap-4">
-                <button type="button" onClick={() => setIsEditing(false)} className="w-full bg-slate-200 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-300 transition-colors">Hủy</button>
-                <button type="submit" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-transform transform hover:scale-105">Lưu thay đổi</button>
+                <Button type="button" variant="subtle" onClick={() => setIsEditing(false)} className="w-full">Hủy</Button>
+                <Button type="submit" variant="slide-purple" className="w-full">Lưu thay đổi</Button>
               </div>
             </form>
           ) : (
@@ -186,8 +187,8 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className="mt-8 space-y-4">
-                <button onClick={() => setIsEditing(true)} className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg hover:bg-slate-900 transition-transform transform hover:scale-105">Chỉnh sửa thông tin</button>
-                <button onClick={handleLogout} className="w-full bg-red-500 text-white font-bold py-3 rounded-lg hover:bg-red-600 transition-transform transform hover:scale-105">Đăng xuất</button>
+                <Button onClick={() => setIsEditing(true)} variant="slide" className="w-full">Chỉnh sửa thông tin</Button>
+                <Button onClick={handleLogout} variant="slide-red" className="w-full">Đăng xuất</Button>
               </div>
             </>
           )}
@@ -217,13 +218,13 @@ const ProfilePage = () => {
                     <input type="password" value={passwordData.confirmNewPassword} onChange={(e) => setPasswordData({...passwordData, confirmNewPassword: e.target.value})} className="mt-1 w-full border-2 border-slate-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500" required />
                   </div>
                   <div className="flex gap-4">
-                    <button type="button" onClick={() => setIsChangingPassword(false)} className="w-full bg-slate-200 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-300 transition-colors">Hủy</button>
-                    <button type="submit" className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg hover:bg-slate-900 transition-transform transform hover:scale-105">Lưu Mật Khẩu Mới</button>
+                    <Button type="button" variant="subtle" onClick={() => setIsChangingPassword(false)} className="w-full">Hủy</Button>
+                    <Button type="submit" variant="slide-purple" className="w-full">Lưu Mật Khẩu Mới</Button>
                   </div>
                 </form>
               </>
             ) : (
-              <button onClick={() => setIsChangingPassword(true)} className="w-full bg-slate-100 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-200 transition-colors">
+              <button onClick={() => setIsChangingPassword(true)} className="w-full bg-slate-100 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-200 transition-colors mt-4">
                 Đổi mật khẩu
               </button>
             )}

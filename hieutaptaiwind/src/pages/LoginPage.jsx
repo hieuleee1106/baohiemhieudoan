@@ -3,7 +3,8 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "./AuthContext";
-
+import Button from "../components/Button";
+import Chatbox from "../components/Chatbox";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -95,70 +96,100 @@ const LoginPage = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-slate-50 p-4"
+      className="min-h-screen flex items-center justify-center bg-red-50/30 p-4 relative overflow-hidden"
     >
-      <div className="absolute inset-0 opacity-5" style={{backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"}}></div>
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl shadow-purple-200/50 p-8 relative">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold tracking-tight">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Chào Mừng</span> Trở Lại
-          </h1>
-          <p className="text-slate-500 mt-2">Đăng nhập để tiếp tục khám phá</p>
-        </div>
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Mật khẩu"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full border-2 border-slate-200 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-            required
-          />
-          {error && <p className="text-red-500 text-xs italic -mt-4 mb-4">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-lg transition-transform transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/40"
-          >
-            Đăng nhập
-          </button>
-          <div className="my-4 flex items-center before:flex-1 before:border-t before:border-slate-300 before:mt-0.5 after:flex-1 after:border-t after:border-slate-300 after:mt-0.5">
-            <p className="text-center font-semibold mx-4 mb-0 text-slate-500">HOẶC</p>
-          </div>
+      {/* Decorative background elements */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
 
-          {/* Sử dụng lại component GoogleLogin */}
-          <div className="flex justify-center">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme="outline"
-              size="large"
-              shape="rectangular"
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-red-100 p-8 relative z-10 border border-red-50">
+        <div className="text-center mb-10">
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            className="mx-auto h-20 w-auto mb-6 object-contain"
+            onError={(e) => e.target.style.display = 'none'} 
+          />
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">
+            Chào Mừng <span className="text-red-600">Trở Lại</span>
+          </h1>
+          <p className="text-slate-500 mt-3 text-sm font-medium">Đăng nhập để tiếp tục trải nghiệm</p>
+        </div>
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-slate-600 ml-1">Email</label>
+            <input
+              type="email"
+              placeholder="Email của bạn"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all"
+              required
+            />
+          </div>
+          
+          <div className="space-y-1">
+            <div className="flex justify-between items-center ml-1">
+              <label className="text-sm font-semibold text-slate-600">Mật khẩu</label>
+              <Link to="/forgot-password" className="text-xs font-bold text-red-500 hover:text-red-700 transition-colors">
+                Quên mật khẩu?
+              </Link>
+            </div>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all"
+              required
             />
           </div>
 
-          <div className="text-right text-sm mb-6">
-            <Link to="/forgot-password" className="font-medium text-purple-600 hover:text-purple-800">
-              Quên mật khẩu?
-            </Link>
-          </div>
-          <div className="mt-4 text-center">
-            <p className="text-slate-500">
-              Chưa có tài khoản?{" "}
-              <Link to="/register" className="text-purple-600 hover:underline font-medium">
-                Đăng ký ngay
-              </Link>
-            </p>
-          </div>
+          {error && (
+            <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              {error}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            variant="slide-red"
+            className="w-full shadow-lg shadow-red-500/30"
+          >
+            Đăng nhập
+          </Button>
         </form>
+
+        <div className="my-8 flex items-center">
+          <div className="flex-1 border-t border-slate-200"></div>
+          <span className="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Hoặc</span>
+          <div className="flex-1 border-t border-slate-200"></div>
+        </div>
+
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            theme="outline"
+            size="large"
+            shape="rectangular"
+            width="100%"
+          />
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-slate-500 text-sm">
+            Chưa có tài khoản?{" "}
+            <Link to="/register" className="text-red-600 hover:text-red-700 font-bold hover:underline">
+              Đăng ký ngay
+            </Link>
+          </p>
+        </div>
       </div>
+      <Chatbox />
     </div>
   );
 };

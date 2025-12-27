@@ -70,8 +70,8 @@ const Chatbox = () => {
       {isOpen && (
         <div className="w-80 h-112 bg-white rounded-2xl shadow-2xl flex flex-col">
           {/* Header */}
-          <div className="p-4 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-t-2xl flex justify-between items-center">
-            <h3 className="font-bold">Trợ lý AI</h3>
+          <div className="p-4 bg-red-400 text-white rounded-t-2xl flex justify-between items-center">
+            <h3 className="font-bold">Trợ lý ảo</h3>
             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200" aria-label="Đóng hộp thoại chat">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -83,7 +83,7 @@ const Chatbox = () => {
           <div className="flex-1 p-4 overflow-y-auto">
             {messages.map((msg, index) => (
               <div key={index} className={`flex mb-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`rounded-lg px-3 py-2 max-w-xs ${msg.sender === 'user' ? 'bg-purple-500 text-white' : 'bg-slate-200 text-slate-800'}`}>
+                <div className={`rounded-lg px-3 py-2 max-w-xs ${msg.sender === 'user' ? 'bg-red-500 text-white' : 'bg-slate-200 text-slate-800'}`}>
                   {msg.text}
                 </div>
               </div>
@@ -111,7 +111,7 @@ const Chatbox = () => {
               />
               <button
                 type="submit"
-                className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 disabled:bg-slate-400"
+                className="bg-amber-300 text-white p-2 rounded-lg hover:bg-purple-700 disabled:bg-slate-400"
                 disabled={isLoading}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

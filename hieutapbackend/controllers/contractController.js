@@ -113,25 +113,6 @@ export const deleteContract = async (req, res) => {
   }
 };
 
-// @desc    Thanh toán hợp đồng (User)
-// @route   PUT /api/contracts/:id/pay
-// @access  Private (Endpoint này có thể không cần thiết nữa nếu client gọi thẳng /api/payment/create_payment_url)
-export const payContract = async (req, res) => {
-  try {
-    const contract = await Contract.findOne({ _id: req.params.id, user: req.user._id });
-
-    if (!contract) {
-      return res.status(404).json({ message: 'Không tìm thấy hợp đồng.' });
-    } 
-    // Logic này sẽ được chuyển sang hàm createPaymentUrl trong paymentController.
-    // Client sẽ gọi POST /api/payment/create_payment_url với contractId và amount.
-    // Endpoint này có thể được giữ lại cho các phương thức thanh toán khác hoặc loại bỏ.
-    res.status(200).json({ message: "Endpoint sẵn sàng cho việc tích hợp thanh toán. Vui lòng sử dụng /api/payment/create_payment_url để tạo giao dịch VNPay." });
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi server' });
-  }
-};
-
 // @desc    Gửi yêu cầu hủy hợp đồng (User)
 // @route   POST /api/contracts/:id/cancel-request
 // @access  Private
@@ -270,6 +251,45 @@ export const updateClaimStatus = async (req, res) => {
     res.status(200).json({ message: 'Cập nhật yêu cầu bồi thường thành công.', contract });
   } catch (error) {
     console.error("Lỗi cập nhật bồi thường:", error);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+// @desc    Xác nhận thanh toán thủ công (User)
+// @route   POST /api/contracts/:id/confirm-payment
+// @access  Private
+export const confirmPayment = async (req, res) => {
+  try {
+    const contract = await Contract.findOne({ _id: req.params.id, user: req.user._id }).populate('product');
+
+    if (!contract) {
+      return res.status(404).json({ message: 'Không tìm thấy hợp đồng.' });
+    }
+
+    if (contract.status !== 'Chờ thanh toán') {
+      return res.status(400).json({ message: 'Hợp đồng này không ở trạng thái chờ thanh toán.' });
+    }
+
+    // Cập nhật trạng thái hợp đồng
+    contract.status = 'Hiệu lực';
+    contract.paymentDetails = {
+      method: 'Manual Confirmation',
+      paidAt: new Date(),
+      amount: contract.premium,
+    };
+    await contract.save();
+
+    // Tạo thông báo cho người dùng
+    await Notification.create({
+      user: contract.user,
+      message: `Thanh toán thành công cho hợp đồng "${contract.product.name}". Hợp đồng của bạn đã có hiệu lực.`,
+      link: `/my-contracts`
+    });
+
+    res.status(200).json({ message: 'Thanh toán thành công!', contract });
+
+  } catch (error) {
+    console.error("Lỗi xác nhận thanh toán:", error);
     res.status(500).json({ message: 'Lỗi server' });
   }
 };

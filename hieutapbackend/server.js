@@ -24,6 +24,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Thêm dòng này để xử lý form data
 
 // static uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

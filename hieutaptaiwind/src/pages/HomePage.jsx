@@ -5,6 +5,7 @@ import ProductCard from "../components/ProductCard";
 import Footer from "../components/Footer";
 import HeroSlider from "../components/HeroSlider";
 import Chatbox from "../components/Chatbox";
+import Button from "../components/Button";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -48,7 +49,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-800">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
       <Header />
 
       <main className="flex-grow">
@@ -56,18 +57,20 @@ const HomePage = () => {
         <HeroSlider />
 
         {/* CONTENT */}
-        <section className="relative container mx-auto px-6 -mt-20">
+        <section className="container mx-auto px-6 pb-20 -mt-6">
           {/* TITLE */}
-          <div className="text-center py-20">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-sky-500">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-block px-4 py-1.5 mb-4 text-xs font-bold tracking-wider text-purple-600 uppercase bg-purple-100 rounded-full">
+              Giải pháp bảo hiểm toàn diện
+            </div>
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
                 An Tâm
               </span>{" "}
               Vững Bước
             </h1>
-            <p className="mt-4 max-w-2xl mx-auto text-lg text-slate-500">
-              Những giải pháp bảo hiểm minh bạch, phù hợp và đồng hành lâu dài
-              cùng bạn và gia đình.
+            <p className="text-lg text-slate-600 leading-relaxed">
+              Những giải pháp bảo hiểm minh bạch, phù hợp và đồng hành lâu dài cùng bạn và gia đình trên mọi chặng đường.
             </p>
           </div>
 
@@ -85,8 +88,8 @@ const HomePage = () => {
 
           {/* PRODUCT LIST */}
           {!loading && !error && products.length > 0 && (
-            <div className="bg-slate-50/70 rounded-3xl p-8 md:p-12 shadow-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-10 gap-y-16">
+            <div className="relative">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {products.slice(0, visibleCount).map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
@@ -94,16 +97,11 @@ const HomePage = () => {
 
               {/* LOAD MORE */}
               {visibleCount < products.length && (
-                <div className="flex justify-center mt-20">
-                  <button
+                <div className="flex justify-center mt-16">
+                  <Button
                     onClick={handleLoadMore}
-                    className="px-10 py-3 rounded-full
-                      bg-white border border-slate-200
-                      text-slate-600 font-semibold
-                      hover:border-emerald-500 hover:text-emerald-600
-                      hover:bg-emerald-50
-                      transition-all shadow-sm hover:shadow-md
-                      flex items-center gap-2 group"
+                    variant="slide"
+                    className="px-10 py-3 rounded-full shadow-lg shadow-purple-200/50 border border-purple-100"
                   >
                     Xem thêm sản phẩm
                     <svg
@@ -120,7 +118,7 @@ const HomePage = () => {
                         d="M19 9l-7 7-7-7"
                       />
                     </svg>
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
@@ -128,10 +126,31 @@ const HomePage = () => {
 
           {/* EMPTY */}
           {!loading && products.length === 0 && (
-            <p className="text-center text-slate-500 py-24">
-              Không tìm thấy sản phẩm phù hợp.
-            </p>
+            <div className="text-center py-20 bg-white/60 rounded-3xl border border-slate-100">
+              <p className="text-slate-500 text-lg">Không tìm thấy sản phẩm phù hợp.</p>
+            </div>
           )}
+        </section>
+
+        {/* Trust Indicators Section */}
+        <section className="py-12 border-t border-slate-200/60 bg-red-300">
+          <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-4xl mb-2">🛡️</div>
+              <h3 className="font-bold text-slate-800">Uy tín hàng đầu</h3>
+              <p className="text-sm text-slate-500 mt-1">Đối tác tin cậy của hàng triệu gia đình Việt</p>
+            </div>
+            <div>
+              <div className="text-4xl mb-2">⚡</div>
+              <h3 className="font-bold text-slate-800">Bồi thường nhanh chóng</h3>
+              <p className="text-sm text-slate-500 mt-1">Quy trình đơn giản, minh bạch, hỗ trợ 24/7</p>
+            </div>
+            <div>
+              <div className="text-4xl mb-2">💎</div>
+              <h3 className="font-bold text-slate-800">Quyền lợi vượt trội</h3>
+              <p className="text-sm text-slate-500 mt-1">Giải pháp tài chính tối ưu nhất cho bạn</p>
+            </div>
+          </div>
         </section>
       </main>
 

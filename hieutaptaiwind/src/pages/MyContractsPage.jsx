@@ -2,7 +2,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MyContracts from '../components/MyContracts';
 import HeroSlider from '../components/HeroSlider';
-
+import Chatbox from '../components/Chatbox';
 const MyContractsPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -18,6 +18,7 @@ const MyContractsPage = () => {
         </div>
       </main>
       <Footer />
+      <Chatbox />
     </div>
   );
 };

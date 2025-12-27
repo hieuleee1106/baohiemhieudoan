@@ -7,11 +7,11 @@ import {
   getContracts,
   updateContract,
   deleteContract,
-  payContract,
   requestCancellation,
   reviewCancellation,
   requestClaim,
   updateClaimStatus,
+  confirmPayment,
 } from '../controllers/contractController.js';
 
 const router = express.Router();
@@ -21,7 +21,7 @@ router.route('/')
   .get(protect, admin, getContracts); // Thêm route GET cho admin
 
 router.route('/my').get(protect, getMyContracts);
-router.route('/:id/pay').put(protect, payContract); // Route cho user thanh toán
+router.route('/:id/confirm-payment').post(protect, confirmPayment); // Route cho user xác nhận thanh toán
 
 // Routes cho chức năng hủy hợp đồng
 router.route('/:id/cancel-request').post(protect, requestCancellation); // User gửi yêu cầu

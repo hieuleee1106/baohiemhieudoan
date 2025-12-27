@@ -22,6 +22,24 @@ export const createConsultation = async (req, res) => {
   }
 };
 
+// @desc    Xóa yêu cầu tư vấn (Admin)
+// @route   DELETE /api/consultations/:id
+// @access  Private/Admin
+export const deleteConsultation = async (req, res) => {
+  try {
+    const request = await ConsultationRequest.findById(req.params.id);
+
+    if (!request) {
+      return res.status(404).json({ message: 'Không tìm thấy yêu cầu tư vấn.' });
+    }
+
+    await request.deleteOne();
+    res.status(200).json({ message: 'Đã xóa yêu cầu tư vấn.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
 // @desc    Lấy tất cả yêu cầu tư vấn (cho Admin)
 // @route   GET /api/consultations
 // @access  Private/Admin

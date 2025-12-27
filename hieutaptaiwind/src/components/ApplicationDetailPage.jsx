@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Button from './Button';
 
 const ApplicationDetailPage = () => {
   const { id } = useParams();
@@ -88,7 +89,7 @@ const ApplicationDetailPage = () => {
   const { applicant, product, applicationData, documents, status, createdAt } = application;
 
   return (
-    <div>
+    <div className="bg-white rounded-xl shadow-lg p-8">
       <div className="mb-6">
         <Link to="/admin/dashboard/applications" className="text-purple-600 hover:underline font-semibold">
           &larr; Quay lại danh sách
@@ -144,19 +145,20 @@ const ApplicationDetailPage = () => {
               </select>
             </div>
             {updateMessage && <p className="text-sm text-center mt-2 text-green-600">{updateMessage}</p>}
-            <button onClick={handleStatusUpdate} className="w-full mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700">
+            <Button onClick={handleStatusUpdate} variant="slide-purple" className="w-full mt-4">
               Lưu thay đổi
-            </button>
+            </Button>
             {/* Nút tạo hợp đồng */}
             {status === 'Đã duyệt' && (
               <div className="mt-4 pt-4 border-t">
-                <button 
-                  onClick={handleCreateContract} 
+                <Button
+                  onClick={handleCreateContract}
                   disabled={isCreatingContract}
-                  className="w-full bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 disabled:bg-green-300"
+                  variant="slide-green"
+                  className="w-full"
                 >
                   {isCreatingContract ? 'Đang tạo...' : 'Tạo hợp đồng'}
-                </button>
+                </Button>
                 {contractMessage && <p className="text-sm text-center mt-2 text-blue-600">{contractMessage}</p>}
               </div>
             )}

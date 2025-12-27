@@ -25,6 +25,7 @@ const ProductCard = ({ product }) => {
           <span className="text-2xl font-bold text-slate-800">{price.toLocaleString('vi-VN')} ₫</span>
           <Button
             size="sm"
+            variant="slide-red"
             className="relative z-10"
             onClick={(e) => {
               e.stopPropagation(); // Ngăn sự kiện click lan ra thẻ Link cha
