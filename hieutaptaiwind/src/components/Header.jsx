@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../pages/AuthContext";
 import NotificationBell from "./NotificationBell"; // Import component chuông
+import Weather from "./Weather";
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -106,6 +107,9 @@ const Header = () => {
 
           {/* User Area */}
           <div className="flex items-center gap-4 flex-shrink-0">
+              <div className="hidden md:block">
+                <Weather variant="header" />
+              </div>
               {user ? (
                 <>
                 <NotificationBell />
@@ -149,7 +153,7 @@ const Header = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/40 transition-all transform hover:scale-105"
+                  className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/40 transition-all transform hover:scale-105"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
@@ -161,7 +165,7 @@ const Header = () => {
         </div>
       </div>
       {/* Tầng dưới: Navigation */}
-      <div style={{ backgroundColor: '#cc503f' }}>
+      <div style={{ backgroundColor: '#2dd9da' }}>
         <div className="container mx-auto px-6">
           <nav className="flex items-center justify-between">
             {/* Nhóm các mục điều hướng ở giữa */}

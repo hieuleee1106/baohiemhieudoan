@@ -6,7 +6,6 @@ import Footer from "../components/Footer";
 import HeroSlider from "../components/HeroSlider";
 import Chatbox from "../components/Chatbox";
 import Button from "../components/Button";
-
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [visibleCount, setVisibleCount] = useState(4);
@@ -51,7 +50,6 @@ const HomePage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
       <Header />
-
       <main className="flex-grow">
         {/* HERO */}
         <HeroSlider />
@@ -133,25 +131,49 @@ const HomePage = () => {
         </section>
 
         {/* Trust Indicators Section */}
-        <section className="py-12 border-t border-slate-200/60 bg-red-300">
-          <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl mb-2">🛡️</div>
-              <h3 className="font-bold text-slate-800">Uy tín hàng đầu</h3>
-              <p className="text-sm text-slate-500 mt-1">Đối tác tin cậy của hàng triệu gia đình Việt</p>
-            </div>
-            <div>
-              <div className="text-4xl mb-2">⚡</div>
-              <h3 className="font-bold text-slate-800">Bồi thường nhanh chóng</h3>
-              <p className="text-sm text-slate-500 mt-1">Quy trình đơn giản, minh bạch, hỗ trợ 24/7</p>
-            </div>
-            <div>
-              <div className="text-4xl mb-2">💎</div>
-              <h3 className="font-bold text-slate-800">Quyền lợi vượt trội</h3>
-              <p className="text-sm text-slate-500 mt-1">Giải pháp tài chính tối ưu nhất cho bạn</p>
-            </div>
-          </div>
-        </section>
+       <section className="py-16 bg-gradient-to-b from-pink-50 via-rose-50 to-white">
+  <div className="container mx-auto px-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+
+      <div className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-md transition">
+        <div className="animate-pulse text-3xl">💖</div>
+
+        <h3 className="font-bold text-slate-800 text-lg">Yêu thương bảo vệ</h3>
+        <p className="text-sm text-slate-500 mt-2">
+          Luôn đồng hành và bảo vệ gia đình bạn
+        </p>
+        <p className="mt-4 text-3xl font-extrabold text-pink-500">2M+</p>
+        <p className="text-xs text-slate-400">Khách hàng tin chọn</p>
+      </div>
+
+      <div className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-md transition">
+        <div className="animate-bounce text-3xl">💗</div>
+
+        <h3 className="font-bold text-slate-800 text-lg">Xử lý siêu nhanh</h3>
+        <p className="text-sm text-slate-500 mt-2">
+          Thủ tục gọn nhẹ – hỗ trợ tận tâm
+        </p>
+        <p className="mt-4 text-3xl font-extrabold text-rose-500">98%</p>
+        <p className="text-xs text-slate-400">Mức độ hài lòng</p>
+      </div>
+
+      <div className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-md transition">
+        <div className="text-3xl transition-transform duration-300 hover:scale-125">
+  💞
+</div>
+
+        <h3 className="font-bold text-slate-800 text-lg">Chăm sóc 24/7</h3>
+        <p className="text-sm text-slate-500 mt-2">
+          Luôn lắng nghe và sẵn sàng hỗ trợ
+        </p>
+        <p className="mt-4 text-3xl font-extrabold text-fuchsia-500">24/7</p>
+        <p className="text-xs text-slate-400">Hỗ trợ liên tục</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
       </main>
 
       <Footer />
