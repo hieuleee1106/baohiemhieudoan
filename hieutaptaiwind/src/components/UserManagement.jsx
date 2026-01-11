@@ -33,7 +33,7 @@ const UserManagement = () => {
   };
 
   useEffect(() => {
-    if (!authLoading && loggedInUser?.role === 'admin') {
+    if (!authLoading && ['admin', 'staff'].includes(loggedInUser?.role)) {
       fetchUsers();
     } else if (!authLoading) {
       setLoading(false);

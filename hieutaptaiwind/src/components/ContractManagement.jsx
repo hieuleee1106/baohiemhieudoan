@@ -19,6 +19,7 @@ const ContractManagement = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewData, setReviewData] = useState(null);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [processingId, setProcessingId] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('Tất cả');
@@ -55,7 +56,7 @@ const ContractManagement = () => {
   };
 
   useEffect(() => {
-    if (!authLoading && user?.role === 'admin') {
+    if (!authLoading && ['admin', 'staff'].includes(user?.role)) {
       fetchContracts();
     }
   }, [user, authLoading]);
@@ -119,6 +120,32 @@ const ContractManagement = () => {
       showNotification(err.message, 'error');
     } finally {
       setIsReviewing(false);
+    }
+  };
+
+  const handleActivate = async (contractId) => {
+    if (!window.confirm('Bạn có chắc chắn muốn kích hoạt hợp đồng này (Đã nhận tiền mặt)?')) return;
+    
+    setProcessingId(contractId);
+    try {
+      const token = localStorage.getItem('hieushop-token');
+      const res = await fetch(`/api/contracts/${contractId}/activate`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` 
+        },
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Lỗi kích hoạt');
+
+      showNotification('Kích hoạt hợp đồng thành công!');
+      fetchContracts(); 
+    } catch (error) {
+      showNotification(error.message, 'error');
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -208,12 +235,24 @@ const ContractManagement = () => {
                       </Button>
                     ) : (
                       <div className="flex gap-2">
-                        <Button size="sm" variant="slide" onClick={() => {
-                          setCurrentContract(c);
-                          setIsModalOpen(true);
-                        }}>
-                          Sửa
-                        </Button>
+                        {c.status === 'Chờ thanh toán' && (
+                          <Button
+                            size="sm"
+                            variant="slide-blue"
+                            onClick={() => handleActivate(c._id)}
+                            disabled={processingId === c._id}
+                          >
+                            {processingId === c._id ? '...' : 'Kích hoạt'}
+                          </Button>
+                        )}
+                        {c.status !== 'Đã hủy' && (
+                          <Button size="sm" variant="slide" onClick={() => {
+                            setCurrentContract(c);
+                            setIsModalOpen(true);
+                          }}>
+                            Sửa
+                          </Button>
+                        )}
                         <Button size="sm" variant="slide-red" onClick={() => {
                           setContractToDelete(c);
                           setIsDeleteModalOpen(true);

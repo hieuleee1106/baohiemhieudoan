@@ -40,7 +40,7 @@ const ApplicationManagement = () => {
   };
 
   useEffect(() => {
-    if (!authLoading && user?.role === 'admin') {
+    if (!authLoading && ['admin', 'staff'].includes(user?.role)) {
       fetchApplications();
     } else if (!authLoading) {
       setLoading(false);

@@ -87,6 +87,7 @@ const ApplicationDetailPage = () => {
   if (!application) return <p>Không tìm thấy hồ sơ.</p>;
 
   const { applicant, product, applicationData, documents, status, createdAt } = application;
+  const isFinalStatus = ['Đã duyệt', 'Từ chối'].includes(status);
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-8">
@@ -137,7 +138,7 @@ const ApplicationDetailPage = () => {
             <p><strong>Ngày nộp:</strong> {new Date(createdAt).toLocaleString('vi-VN')}</p>
             <div className="mt-4">
               <label htmlFor="status" className="block text-sm font-medium text-gray-700">Cập nhật trạng thái</label>
-              <select id="status" name="status" value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md">
+              <select id="status" name="status" value={newStatus} onChange={(e) => setNewStatus(e.target.value)} disabled={isFinalStatus} className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md ${isFinalStatus ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}>
                 <option>Chờ duyệt</option>
                 <option>Yêu cầu bổ sung</option>
                 <option>Đã duyệt</option>
@@ -145,9 +146,15 @@ const ApplicationDetailPage = () => {
               </select>
             </div>
             {updateMessage && <p className="text-sm text-center mt-2 text-green-600">{updateMessage}</p>}
-            <Button onClick={handleStatusUpdate} variant="slide-purple" className="w-full mt-4">
-              Lưu thay đổi
-            </Button>
+            {!isFinalStatus ? (
+              <Button onClick={handleStatusUpdate} variant="slide-purple" className="w-full mt-4">
+                Lưu thay đổi
+              </Button>
+            ) : (
+              <p className="text-sm text-center mt-4 text-slate-500 italic bg-slate-100 p-2 rounded">
+                Hồ sơ đã {status.toLowerCase()}, không thể thay đổi trạng thái.
+              </p>
+            )}
             {/* Nút tạo hợp đồng */}
             {status === 'Đã duyệt' && (
               <div className="mt-4 pt-4 border-t">

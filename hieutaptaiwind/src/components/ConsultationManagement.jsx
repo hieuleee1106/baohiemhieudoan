@@ -41,7 +41,7 @@ const ConsultationManagement = () => {
   };
 
   useEffect(() => {
-    if (!authLoading && user?.role === 'admin') {
+    if (!authLoading && ['admin', 'staff'].includes(user?.role)) {
       fetchRequests();
     } else if (!authLoading) {
       setLoading(false);

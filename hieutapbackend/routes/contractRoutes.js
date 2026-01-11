@@ -12,6 +12,7 @@ import {
   requestClaim,
   updateClaimStatus,
   confirmPayment,
+  activateContract,
 } from '../controllers/contractController.js';
 
 const router = express.Router();
@@ -22,6 +23,9 @@ router.route('/')
 
 router.route('/my').get(protect, getMyContracts);
 router.route('/:id/confirm-payment').post(protect, confirmPayment); // Route cho user xác nhận thanh toán
+
+// Route kích hoạt hợp đồng thủ công (Admin)
+router.route('/:id/activate').put(protect, admin, activateContract);
 
 // Routes cho chức năng hủy hợp đồng
 router.route('/:id/cancel-request').post(protect, requestCancellation); // User gửi yêu cầu

@@ -52,6 +52,8 @@ const Header = () => {
   }, [dropdownRef, filterRef]);
 
   const handleLogout = () => {
+    // Xóa session chat để lần đăng nhập sau không hiện tin nhắn cũ
+    localStorage.removeItem('chatSessionStart');
     // 1. Bắt đầu chuyển hướng về trang đăng nhập
     navigate('/login'); 
     // 2. Đợi một khoảng thời gian rất ngắn để đảm bảo navigation hoàn tất
@@ -142,6 +144,7 @@ const Header = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0012 11z" clipRule="evenodd" /></svg>
                         <span>Hồ sơ của bạn</span>
                       </Link>
+                    
                       <button onClick={handleLogout} className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-slate-800 hover:bg-slate-100 hover:text-pink-600 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" /></svg>
                         <span>Đăng xuất</span>
@@ -212,6 +215,12 @@ const Header = () => {
                 <Link to="/claim-request" className="flex items-center gap-2 py-3 text-white hover:text-yellow-300 transition-colors font-semibold">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" /></svg>
                   Yêu cầu chi trả
+                </Link>
+              )}
+              {user && (
+                <Link to="/my-transactions" className="flex items-center gap-2 py-3 text-white hover:text-yellow-300 transition-colors font-semibold">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" /></svg>
+                  Lịch sử giao dịch
                 </Link>
               )}
             </div>

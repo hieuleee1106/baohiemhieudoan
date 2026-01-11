@@ -2,6 +2,9 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
+import http from "http";
+import { Server } from "socket.io";
+import { setupSocket } from "./socket/socketManager.js";
 
 // routes
 import authRoutes from "./routes/authRoutes.js";
@@ -13,10 +16,22 @@ import contractRoutes from "./routes/contractRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import transactionRoutes from "./routes/transactionRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Cấu hình lại domain frontend của bạn khi deploy
+    methods: ["GET", "POST"],
+  },
+});
+setupSocket(io);
+
 const __dirname = path.resolve();
 
 // DB
@@ -39,6 +54,9 @@ app.use("/api/contracts", contractRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/messages", messageRoutes);
 
 // ================= FRONTEND =================
 app.use(express.static(path.join(__dirname, "dist")));
@@ -50,6 +68,6 @@ app.get(/.*/, (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });

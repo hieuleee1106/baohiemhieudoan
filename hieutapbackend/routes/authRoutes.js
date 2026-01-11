@@ -14,6 +14,9 @@ import {
   resetPassword,
   getAllUsers,
   deleteUser, // Import hàm xóa người dùng
+  createStaff,
+  getAllStaff,
+  updateStaff,
 } from "../controllers/authController.js";
 
 // Cấu hình Multer để lưu file tải lên
@@ -105,5 +108,27 @@ router.get("/users", protect, admin, getAllUsers);
  * @access  Private/Admin
  */
 router.delete("/users/:id", protect, admin, deleteUser);
+
+// --- ROUTE QUẢN LÝ NHÂN VIÊN ---
+/**
+ * @route   GET /api/auth/staff
+ * @desc    Lấy danh sách nhân viên (Admin/Staff)
+ * @access  Private/Admin
+ */
+router.get("/staff", protect, admin, getAllStaff);
+
+/**
+ * @route   POST /api/auth/create-staff
+ * @desc    Tạo nhân viên mới (Chỉ Admin)
+ * @access  Private/Admin
+ */
+router.post("/create-staff", protect, admin, createStaff);
+
+/**
+ * @route   PUT /api/auth/staff/:id
+ * @desc    Cập nhật thông tin nhân viên (Chỉ Admin)
+ * @access  Private/Admin
+ */
+router.put("/staff/:id", protect, admin, updateStaff);
 
 export default router;

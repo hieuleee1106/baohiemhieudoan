@@ -1,6 +1,7 @@
 import { Contract } from '../models/Contract.js';
 import { InsuranceApplication } from '../models/InsuranceApplication.js';
 import { Notification } from '../models/Notification.js';
+import { Transaction } from '../models/Transaction.js';
 
 // @desc    Tạo hợp đồng từ một hồ sơ đã duyệt (Admin)
 // @route   POST /api/contracts
@@ -279,6 +280,17 @@ export const confirmPayment = async (req, res) => {
     };
     await contract.save();
 
+    // Tạo bản ghi lịch sử giao dịch
+    await Transaction.create({
+      user: contract.user,
+      contract: contract._id,
+      amount: contract.premium,
+      method: 'Manual', // Thanh toán thủ công
+      status: 'Success',
+      description: `Thanh toán thủ công cho hợp đồng ${contract.contractNumber}`,
+      transactionId: `MANUAL-${Date.now()}`
+    });
+
     // Tạo thông báo cho người dùng
     await Notification.create({
       user: contract.user,
@@ -290,6 +302,56 @@ export const confirmPayment = async (req, res) => {
 
   } catch (error) {
     console.error("Lỗi xác nhận thanh toán:", error);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+// @desc    Kích hoạt hợp đồng thủ công (Admin) - Dành cho thanh toán tiền mặt
+// @route   PUT /api/contracts/:id/activate
+// @access  Private/Admin
+export const activateContract = async (req, res) => {
+  try {
+    const contract = await Contract.findById(req.params.id).populate('product');
+
+    if (!contract) {
+      return res.status(404).json({ message: 'Không tìm thấy hợp đồng.' });
+    }
+
+    if (contract.status === 'Hiệu lực') {
+      return res.status(400).json({ message: 'Hợp đồng này đã có hiệu lực từ trước.' });
+    }
+
+    // Cập nhật trạng thái hợp đồng
+    contract.status = 'Hiệu lực';
+    contract.paymentDetails = {
+      method: 'Tiền mặt/Thủ công (Admin)',
+      paidAt: new Date(),
+      amount: contract.premium,
+      note: 'Được kích hoạt thủ công bởi Admin'
+    };
+    await contract.save();
+
+    // Tạo bản ghi lịch sử giao dịch
+    await Transaction.create({
+      user: contract.user,
+      contract: contract._id,
+      amount: contract.premium,
+      method: 'Cash/Manual',
+      status: 'Success',
+      description: `Thu tiền mặt/Kích hoạt thủ công HĐ ${contract.contractNumber}`,
+      transactionId: `ADMIN-ACT-${Date.now()}`
+    });
+
+    // Gửi thông báo cho User
+    await Notification.create({
+      user: contract.user,
+      message: `Hợp đồng "${contract.product.name}" của bạn đã được Admin kích hoạt thành công (Thanh toán tiền mặt).`,
+      link: `/my-contracts`
+    });
+
+    res.json({ message: 'Kích hoạt hợp đồng thành công.', contract });
+  } catch (error) {
+    console.error("Lỗi kích hoạt hợp đồng:", error);
     res.status(500).json({ message: 'Lỗi server' });
   }
 };

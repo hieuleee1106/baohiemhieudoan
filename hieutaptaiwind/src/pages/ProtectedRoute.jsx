@@ -14,8 +14,8 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (adminOnly && user.role !== 'admin') {
-    // 2. Nếu đã đăng nhập nhưng không phải admin và route yêu cầu admin
+  if (adminOnly && !['admin', 'staff'].includes(user.role)) {
+    // 2. Nếu đã đăng nhập nhưng không phải admin/staff và route yêu cầu quyền admin
     // Chuyển hướng về trang chủ hoặc một trang "Không có quyền truy cập"
     // Ở đây, chúng ta chuyển về trang chủ
     return <Navigate to="/" replace />;

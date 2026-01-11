@@ -44,7 +44,7 @@ const LoginPage = () => {
       showNotification(`Chào mừng trở lại, ${user.name}!`);
 
       // --- THAY ĐỔI LOGIC ĐIỀU HƯỚNG ---
-      if (user.role === 'admin') {
+      if (['admin', 'staff'].includes(user.role)) {
         navigate('/admin/dashboard', { replace: true }); // Nếu là admin, chuyển đến trang dashboard
       } else {
         navigate(from, { replace: true }); // Nếu là user thường, quay lại trang trước đó
@@ -77,7 +77,7 @@ const LoginPage = () => {
         showNotification(`Chào mừng, ${user.name}!`);
 
         // --- THAY ĐỔI LOGIC ĐIỀU HƯỚNG ---
-        if (user.role === 'admin') {
+        if (['admin', 'staff'].includes(user.role)) {
           navigate('/admin/dashboard', { replace: true }); // Nếu là admin, chuyển đến trang dashboard
         } else {
           navigate(from, { replace: true }); // Nếu là user thường, quay lại trang trước đó

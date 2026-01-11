@@ -34,7 +34,7 @@ const ProductManagement = () => {
   };
 
   useEffect(() => {
-    if (!authLoading && user?.role === 'admin') {
+    if (!authLoading && ['admin', 'staff'].includes(user?.role)) {
       fetchProducts();
     } else if (!authLoading) {
       setLoading(false);

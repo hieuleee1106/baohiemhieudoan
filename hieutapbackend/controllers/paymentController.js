@@ -1,6 +1,7 @@
 import axios from 'axios';
 import crypto from 'crypto';
 import { Contract } from '../models/Contract.js'; // Đảm bảo đường dẫn đúng tới model Contract
+import { Transaction } from '../models/Transaction.js';
 
 export const createZaloPayTest = async (req, res) => {
   const { amount, contractNumber } = req.body;
@@ -78,10 +79,25 @@ export const callback = async (req, res) => {
 
       if (contractNumber) {
         // Cập nhật trạng thái hợp đồng
-        await Contract.findOneAndUpdate(
-          { contractNumber: contractNumber },
-          { status: 'Hiệu lực' }
-        );
+        const contract = await Contract.findOne({ contractNumber: contractNumber });
+        
+        // Chỉ cập nhật và tạo giao dịch nếu hợp đồng chưa có hiệu lực
+        if (contract && contract.status !== 'Hiệu lực') {
+          contract.status = 'Hiệu lực';
+          contract.paymentDetails = { ...contract.paymentDetails, method: 'ZaloPay', paidAt: new Date() };
+          await contract.save();
+
+          // Lưu lịch sử giao dịch
+          await Transaction.create({
+            user: contract.user,
+            contract: contract._id,
+            amount: dataJson.amount,
+            method: 'ZaloPay',
+            status: 'Success',
+            transactionId: dataJson.app_trans_id,
+            description: `Thanh toán ZaloPay cho HĐ ${contractNumber}`
+          });
+        }
       }
 
       result.return_code = 1;
@@ -122,7 +138,22 @@ export const checkZaloPayStatus = async (req, res) => {
     
     // return_code = 1 nghĩa là thanh toán thành công
     if (result.data.return_code === 1) {
-      await Contract.findOneAndUpdate({ contractNumber }, { status: 'Hiệu lực' });
+      if (contract.status !== 'Hiệu lực') {
+        contract.status = 'Hiệu lực';
+        contract.paymentDetails = { ...contract.paymentDetails, method: 'ZaloPay', paidAt: new Date() };
+        await contract.save();
+
+        // Lưu lịch sử giao dịch
+        await Transaction.create({
+          user: contract.user,
+          contract: contract._id,
+          amount: result.data.amount || contract.premium,
+          method: 'ZaloPay',
+          status: 'Success',
+          transactionId: contract.paymentDetails.zaloTransId,
+          description: `Thanh toán ZaloPay cho HĐ ${contractNumber}`
+        });
+      }
     }
 
     return res.json(result.data);

@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { User } from "../models/User.js";
+import { Staff } from "../models/Staff.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.js";
@@ -41,6 +42,67 @@ export const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+/**
+ * @desc    Tạo tài khoản nhân viên (Chỉ Admin mới được gọi)
+ * @route   POST /api/auth/create-staff
+ * @access  Private/Admin
+ */
+export const createStaff = async (req, res) => {
+  try {
+    // 1. Kiểm tra quyền: Chỉ Admin mới được tạo nhân viên
+    // (Giả sử middleware đã xác thực user, ta kiểm tra role tại đây để chắc chắn)
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: "Bạn không có quyền thực hiện hành động này. Chỉ Admin mới được thêm nhân viên." });
+    }
+
+    const { name, email, password, phone, position, salary, department } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Vui lòng nhập tên, email và mật khẩu cho nhân viên." });
+    }
+
+    // 2. Kiểm tra email tồn tại
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email này đã được sử dụng." });
+    }
+
+    // 3. Tạo User với role là 'staff'
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      phone: phone || "",
+      role: "staff", // Quan trọng: Gán quyền staff
+    });
+
+    // 4. Tạo hồ sơ Staff liên kết
+    const newStaffProfile = await Staff.create({
+      user: newUser._id,
+      position,
+      salary,
+      department
+    });
+
+    res.status(201).json({
+      message: "Tạo nhân viên thành công",
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+      },
+      staffProfile: newStaffProfile
+    });
+  } catch (error) {
+    console.error("Lỗi tạo nhân viên:", error);
     res.status(500).json({ message: "Lỗi server" });
   }
 };
@@ -358,6 +420,59 @@ export const getAllUsers = async (req, res) => {
 };
 
 /**
+ * @desc    Lấy danh sách tất cả nhân viên (kèm thông tin User)
+ * @route   GET /api/auth/staff
+ * @access  Private/Admin
+ */
+export const getAllStaff = async (req, res) => {
+  try {
+    // Lấy tất cả hồ sơ Staff và populate thông tin User tương ứng
+    const staffMembers = await Staff.find().populate('user', '-password').sort({ createdAt: -1 });
+    res.status(200).json(staffMembers);
+  } catch (error) {
+    console.error("Lỗi lấy danh sách nhân viên:", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+/**
+ * @desc    Cập nhật thông tin nhân viên
+ * @route   PUT /api/auth/staff/:id
+ * @access  Private/Admin
+ */
+export const updateStaff = async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: "Chỉ Admin mới có quyền chỉnh sửa nhân viên." });
+    }
+
+    const { id } = req.params; // ID của hồ sơ Staff
+    const { name, email, phone, position, salary, department, status } = req.body;
+
+    const staffProfile = await Staff.findById(id);
+    if (!staffProfile) {
+      return res.status(404).json({ message: "Không tìm thấy hồ sơ nhân viên." });
+    }
+
+    // 1. Cập nhật thông tin trong bảng Staff
+    staffProfile.position = position || staffProfile.position;
+    staffProfile.salary = salary || staffProfile.salary;
+    staffProfile.department = department || staffProfile.department;
+    staffProfile.status = status || staffProfile.status;
+    await staffProfile.save();
+
+    // 2. Cập nhật thông tin cơ bản trong bảng User (Tên, SĐT)
+    // Lưu ý: Không cho phép đổi email ở đây để tránh xung đột phức tạp
+    await User.findByIdAndUpdate(staffProfile.user, { name, phone });
+
+    res.status(200).json({ message: "Cập nhật nhân viên thành công.", staff: staffProfile });
+  } catch (error) {
+    console.error("Lỗi cập nhật nhân viên:", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+/**
  * @desc    Xóa người dùng (Admin)
  * @route   DELETE /api/auth/users/:id
  * @access  Private/Admin
@@ -374,6 +489,14 @@ export const deleteUser = async (req, res) => {
     if (user.role === 'admin') {
       return res.status(400).json({ message: 'Không thể xóa tài khoản quản trị viên.' });
     }
+
+    // Ngăn chặn Staff xóa tài khoản của Staff khác (nếu muốn chặt chẽ hơn)
+    if (req.user.role === 'staff' && user.role === 'staff') {
+       return res.status(403).json({ message: 'Nhân viên không có quyền xóa nhân viên khác.' });
+    }
+
+    // Xóa hồ sơ nhân viên liên quan (nếu có) trước khi xóa User
+    await Staff.deleteOne({ user: user._id });
 
     await user.deleteOne();
     res.status(200).json({ message: "Người dùng đã được xóa thành công." });

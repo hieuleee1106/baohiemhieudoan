@@ -21,8 +21,14 @@ import ContractManagement from "./components/ContractManagement"; // Import tran
 import MyContractsPage from "./pages/MyContractsPage"; // Import trang hợp đồng
 import ClaimRequestPage from "./pages/ClaimRequestPage"; // Import trang yêu cầu chi trả
 import ClaimManagement from "./components/ClaimManagement"; // Import trang quản lý bồi thường
+import StaffManagement from "./components/StaffManagement"; // Import trang quản lý nhân viên
+import TransactionManagement from "./components/TransactionManagement";
 import Placeholder from "./components/Placeholder"; // Import component giữ chỗ
 import { Toaster } from "sonner";
+import MyTransactions from "./components/MyTransactions"; // Import trang lịch sử giao dịch user
+import AdminProfile from "./components/AdminProfile"; // Import trang profile admin
+import SupportChat from "./components/SupportChat"; // Import Chat User
+import AdminChatManager from "./components/AdminChatManager"; // Import Chat Admin
 function App() {
 return (
   <>
@@ -62,6 +68,12 @@ return (
         }
       />
       <Route
+        path="/my-transactions"
+        element={
+          <ProtectedRoute><MyTransactions /></ProtectedRoute>
+        }
+      />
+      <Route
         path="/claim-request"
         element={
           <ProtectedRoute><ClaimRequestPage /></ProtectedRoute>
@@ -76,6 +88,7 @@ return (
         <Route index element={<AdminOverview />} />
         {/* Route con cho quản lý người dùng */}
         <Route path="users" element={<UserManagement />} />
+        <Route path="staff" element={<StaffManagement />} />
         <Route path="products" element={<ProductManagement />} />
         <Route path="consultations" element={<ConsultationManagement />} />
         <Route path="applications" element={<Outlet />}>
@@ -85,8 +98,12 @@ return (
         <Route path="orders" element={<Placeholder title="Quản lý Đơn hàng" />} />
         <Route path="contracts" element={<ContractManagement />} />
         <Route path="claims" element={<ClaimManagement />} />
+        <Route path="transactions" element={<TransactionManagement />} />
+        <Route path="profile" element={<AdminProfile />} />
+        <Route path="chat" element={<AdminChatManager />} />
       </Route>
     </Routes>
+    <SupportChat />
   </>
 )
 
