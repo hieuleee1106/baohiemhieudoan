@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../pages/AuthContext';
 import io from 'socket.io-client';
 
-const ENDPOINT = "http://localhost:3000";
+// Tự động xác định địa chỉ backend. Ở local sẽ là localhost, trên Render sẽ là domain của bạn.
+const ENDPOINT = window.location.origin;
 
 const AdminChatManager = () => {
   const { user } = useAuth();

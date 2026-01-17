@@ -3,7 +3,7 @@ import { useAuth } from '../pages/AuthContext';
 import io from 'socket.io-client';
 
 // Kết nối đến server backend (đảm bảo đúng port server đang chạy)
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = window.location.origin;
 
 const SupportChat = () => {
   const { user } = useAuth();
