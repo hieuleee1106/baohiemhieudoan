@@ -28,15 +28,8 @@ const ProfilePage = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    e.stopPropagation();
     setError('');
     setPasswordError('');
-
-    // Kiểm tra dữ liệu cơ bản
-    if (!formData.name || !formData.email) {
-      setError('Tên và email không được bỏ trống');
-      return;
-    }
 
     const updateFormData = new FormData();
     updateFormData.append('name', formData.name);
@@ -65,7 +58,6 @@ const ProfilePage = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn lên đầu trang
     } catch (err) {
       setError(err.message);
-      showNotification(err.message, 'error');
     }
   };
 
@@ -167,7 +159,7 @@ const ProfilePage = () => {
                   />
                   <label 
                     htmlFor="avatar-upload" 
-                    className="cursor-pointer bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm leading-4 font-medium text-slate-700 hover:bg-slate-50 active:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+                    className="cursor-pointer bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm leading-4 font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                   >
                     Chọn ảnh
                   </label>
