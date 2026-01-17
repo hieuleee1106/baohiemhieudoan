@@ -45,8 +45,8 @@ const Button = ({
 
   const content = isSlide ? (
     <>
-      <div className={`absolute inset-0 w-3 ${slideColor} transition-all duration-250 ease-out group-hover:w-full`}></div>
-      <span className="relative group-hover:text-white flex items-center justify-center gap-2 w-full">{children}</span>
+      <div className={`absolute inset-0 w-3 ${slideColor} transition-all duration-250 ease-out group-hover:w-full active:w-full`}></div>
+      <span className="relative group-hover:text-white active:text-white flex items-center justify-center gap-2 w-full pointer-events-none">{children}</span>
     </>
   ) : children;
 
