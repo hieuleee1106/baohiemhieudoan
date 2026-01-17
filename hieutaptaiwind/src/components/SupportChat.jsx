@@ -3,7 +3,7 @@ import { useAuth } from '../pages/AuthContext';
 import io from 'socket.io-client';
 
 // Kết nối đến server backend (đảm bảo đúng port server đang chạy)
-const ENDPOINT = window.location.origin;
+const ENDPOINT = import.meta.env.VITE_BACKEND_URL || window.location.origin;
 
 const SupportChat = () => {
   const { user } = useAuth();

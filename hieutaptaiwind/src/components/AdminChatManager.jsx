@@ -3,7 +3,7 @@ import { useAuth } from '../pages/AuthContext';
 import io from 'socket.io-client';
 
 // Tự động xác định địa chỉ backend. Ở local sẽ là localhost, trên Render sẽ là domain của bạn.
-const ENDPOINT = window.location.origin;
+const ENDPOINT = import.meta.env.VITE_BACKEND_URL || window.location.origin;
 
 const AdminChatManager = () => {
   const { user } = useAuth();
