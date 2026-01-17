@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import http from "http";
 import { Server } from "socket.io";
 import { setupSocket } from "./socket/socketManager.js";
+import cors from "cors";
 
 // routes
 import authRoutes from "./routes/authRoutes.js";
@@ -38,6 +39,7 @@ const __dirname = path.resolve();
 connectDB();
 
 // Middleware
+app.use(cors()); // Cho phép truy cập từ mọi nguồn (quan trọng khi test trên điện thoại/mạng khác)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Thêm dòng này để xử lý form data
 
