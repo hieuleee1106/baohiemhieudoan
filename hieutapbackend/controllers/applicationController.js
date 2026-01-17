@@ -10,8 +10,7 @@ export const createApplication = async (req, res) => {
 
     const documents = req.files.map(file => ({
       name: file.originalname,
-      // Tạo URL đầy đủ để frontend có thể truy cập
-      url: `${req.protocol}://${req.get("host")}/${file.path.replace(/\\/g, "/")}`
+      url: file.path // Cloudinary trả về URL đầy đủ
     }));
 
     const application = new InsuranceApplication({

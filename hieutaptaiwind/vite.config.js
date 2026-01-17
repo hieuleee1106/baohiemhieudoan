@@ -12,11 +12,6 @@ export default defineConfig({
         target: 'http://localhost:3000', // Đảm bảo cổng này khớp với cổng của backend server
         changeOrigin: true, // Bắt buộc phải có để server ảo hóa origin
       },
-      // Thêm proxy cho thư mục uploads để server có thể tìm thấy ảnh
-      '/uploads': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
     },
   },
 });

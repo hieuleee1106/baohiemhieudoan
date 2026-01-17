@@ -112,14 +112,29 @@ const ApplicationDetailPage = () => {
           <h2 className="text-xl font-bold mb-4 mt-8 border-b pb-2">Tài liệu đính kèm</h2>
           {documents.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {documents?.map((doc, index) => (
-                <div key={index} className="group relative">
-                  <a href={doc.url} target="_blank" rel="noopener noreferrer" className="block border rounded-lg overflow-hidden aspect-square">
-                    <img src={doc.url} alt={doc.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
-                  </a>
-                  <p className="text-xs text-center text-slate-500 mt-1 truncate" title={doc.name}>{doc.name}</p>
-                </div>
-              ))}
+              {documents?.map((doc, index) => {
+                // Kiểm tra xem file có phải là ảnh không dựa vào đuôi file hoặc tên
+                const docUrl = doc.url;
+                const isImage = docUrl.startsWith('http') && (/\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(doc.name) || /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(docUrl));
+                
+                return (
+                  <div key={index} className="group relative">
+                    <a href={docUrl} target="_blank" rel="noopener noreferrer" className="block border rounded-lg overflow-hidden aspect-square bg-slate-100 flex items-center justify-center">
+                      {isImage ? (
+                        <img src={docUrl} alt={doc.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" onError={(e) => {e.target.onerror = null; e.target.src = 'https://via.placeholder.com/150?text=Error'}} />
+                      ) : (
+                        <div className="flex flex-col items-center text-slate-400 p-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-[10px] font-bold uppercase truncate max-w-full">{doc.name.split('.').pop() || 'FILE'}</span>
+                        </div>
+                      )}
+                    </a>
+                    <p className="text-xs text-center text-slate-500 mt-1 truncate px-1" title={doc.name}>{doc.name}</p>
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <p>Không có tài liệu nào.</p>

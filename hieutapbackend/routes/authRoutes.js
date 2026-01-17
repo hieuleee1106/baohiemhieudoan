@@ -1,8 +1,6 @@
 import express from "express";
 import { protect, admin } from "../middleware/authMiddleware.js";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+import upload from "../middleware/uploadMiddleware.js";
 import {
   registerUser,
   loginUser,
@@ -19,28 +17,6 @@ import {
   updateStaff,
 } from "../controllers/authController.js";
 
-// Cấu hình Multer để lưu file tải lên
-const uploadDir = 'uploads/';
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // Tự động tạo thư mục 'uploads' nếu nó không tồn tại
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    // Tạo tên file duy nhất để tránh trùng lặp
-    cb(null, `avatar-${req.user.id}-${Date.now()}${path.extname(file.originalname)}`);
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// --- IMPORTANT ---
-// Bạn cần thêm dòng sau vào file server chính (ví dụ: server.js, app.js)
-// để có thể truy cập được ảnh đã tải lên từ trình duyệt:
-// app.use('/uploads', express.static('uploads'));
 const router = express.Router();
 
 /**

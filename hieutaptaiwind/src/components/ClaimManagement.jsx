@@ -155,10 +155,19 @@ const ClaimManagement = () => {
                   {claim.attachments?.length > 0 ? (
                     <div className="flex gap-1 flex-wrap">
                       {claim.attachments.map((att, i) => {
-                        const src = att.startsWith('http') ? att : `/${att.replace(/\\/g, '/')}`;
+                        const src = att;
+                        const isImage = src.startsWith('http') && /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(src);
                         return (
-                          <a key={i} href={src} target="_blank" rel="noreferrer" className="block w-10 h-10 bg-slate-100 rounded border overflow-hidden hover:ring-2 hover:ring-purple-500 transition-all">
-                            <img src={src} alt="doc" className="w-full h-full object-cover" onError={e => e.target.src = 'https://via.placeholder.com/32?text=ERR'} />
+                          <a key={i} href={src} target="_blank" rel="noreferrer" className="block w-16 h-16 bg-slate-100 rounded-lg border overflow-hidden hover:ring-2 hover:ring-purple-500 transition-all relative group flex items-center justify-center">
+                            {isImage ? (
+                              <img src={src} alt="doc" className="w-full h-full object-cover" onError={e => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/64?text=ERR'; }} />
+                            ) : (
+                              <div className="text-slate-400 flex flex-col items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" />
+                                </svg>
+                              </div>
+                            )}
                           </a>
                         );
                       })}

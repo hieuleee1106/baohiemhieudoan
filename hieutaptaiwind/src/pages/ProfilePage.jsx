@@ -146,7 +146,7 @@ const ProfilePage = () => {
                 <label className="block text-sm font-medium text-slate-600">Ảnh đại diện</label>
                 <div className="mt-2 flex items-center gap-4">
                   <img 
-                    src={avatarFile ? URL.createObjectURL(avatarFile) : formData.avatar || `https://ui-avatars.com/api/?name=${formData.name}&background=random`} 
+                    src={avatarFile ? URL.createObjectURL(avatarFile) : (formData.avatar || `https://ui-avatars.com/api/?name=${formData.name}&background=random`)} 
                     alt="Xem trước avatar" 
                     className="w-20 h-20 rounded-full object-cover border-2 border-slate-200"
                   />

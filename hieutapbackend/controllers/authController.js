@@ -265,8 +265,7 @@ export const updateUserDetails = async (req, res) => {
     user.phone = phone;
 
     if (req.file) {
-      const filePath = req.file.path.replace(/\\/g, "/");
-      user.avatar = `${req.protocol}://${req.get("host")}/${filePath}`;
+      user.avatar = req.file.path; // Cloudinary trả về URL đầy đủ trong req.file.path
     } else {
       user.avatar = avatar || user.avatar;
     }

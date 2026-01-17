@@ -139,9 +139,21 @@ const StaffManagement = () => {
               <tr key={staff._id} className="hover:bg-slate-50/80 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-lg">
-                      {staff.user?.name?.charAt(0).toUpperCase()}
-                    </div>
+                    {staff.user?.avatar && staff.user.avatar.startsWith('http') ? (
+                      <img 
+                        src={staff.user.avatar} 
+                        alt={staff.user.name} 
+                        className="h-10 w-10 rounded-full object-cover border border-slate-200 shadow-sm"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `https://ui-avatars.com/api/?name=${staff.user.name}&background=random`;
+                        }}
+                      />
+                    ) : (
+                      <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-lg">
+                        {staff.user?.name?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     <div className="ml-4">
                       <div className="text-sm font-bold text-slate-900">{staff.user?.name}</div>
                       <div className="text-xs text-slate-500">ID: {staff.user?._id?.slice(-6)}</div>

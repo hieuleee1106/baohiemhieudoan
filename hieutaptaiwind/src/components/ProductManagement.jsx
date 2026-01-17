@@ -123,6 +123,7 @@ const ProductManagement = () => {
         <table className="min-w-full">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
+              <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Hình ảnh</th>
               <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Tên sản phẩm</th>
               <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">Nhà cung cấp</th>
               <th className="text-left py-3 px-6 font-semibold text-sm text-slate-600 uppercase tracking-wider">
@@ -146,6 +147,19 @@ const ProductManagement = () => {
           <tbody>
             {filteredProducts.map(product => (
               <tr key={product._id} className="odd:bg-white even:bg-slate-50/50 hover:bg-purple-50/50 transition-colors">
+                <td className="py-4 px-6">
+                  <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden">
+                    <img 
+                      src={product.imageUrl} 
+                      alt={product.name} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.innerHTML = '<div class="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400 text-xs text-center p-1">Không có ảnh</div>';
+                      }}
+                    />
+                  </div>
+                </td>
                 <td className="py-4 px-6 font-medium text-slate-800 whitespace-nowrap">{product.name}</td>
                 <td className="py-4 px-6 text-slate-600 whitespace-nowrap">{product.provider}</td>
                 <td className="py-4 px-6 text-slate-600 whitespace-nowrap">{product.category}</td>

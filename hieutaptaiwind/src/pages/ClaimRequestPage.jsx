@@ -197,8 +197,7 @@ const ClaimRequestPage = () => {
                   {claim.attachments && claim.attachments.length > 0 && (
                     <div className="mt-2 flex gap-2 flex-wrap">
                       {claim.attachments.map((att, i) => {
-                        const src = att.startsWith('http') ? att : `/${att.replace(/\\/g, '/')}`;
-                        return <a key={i} href={src} target="_blank" rel="noreferrer" className="text-xs text-blue-600 underline">Tài liệu {i+1}</a>;
+                        return <a key={i} href={att} target="_blank" rel="noreferrer" className="text-xs text-blue-600 underline">Tài liệu {i+1}</a>;
                       })}
                     </div>
                   )}

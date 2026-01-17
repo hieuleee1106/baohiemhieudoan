@@ -62,6 +62,20 @@ const AdminProfile = () => {
     <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold text-slate-800 mb-6">Thông tin cá nhân</h1>
       
+      <div className="flex justify-center mb-8">
+        <div className="relative">
+          <img 
+            src={user?.avatar && user.avatar.startsWith('http') ? user.avatar : `https://ui-avatars.com/api/?name=${user?.name}&background=random`} 
+            alt="Profile" 
+            className="w-32 h-32 rounded-full object-cover border-4 border-purple-100 shadow-xl"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = `https://ui-avatars.com/api/?name=${user?.name}&background=random`;
+            }}
+          />
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6">
           <div>

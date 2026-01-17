@@ -122,9 +122,13 @@ const Header = () => {
                   >
                     <span className="font-semibold text-slate-800 hidden sm:block">Chào, {user.name}</span>
                     <img 
-                      src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
+                      src={user.avatar && user.avatar.startsWith('http') ? user.avatar : `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
                       alt="avatar" 
                       className="w-10 h-10 rounded-full border-2 border-transparent hover:border-purple-400 transition-all object-cover" 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://ui-avatars.com/api/?name=${user.name}&background=random`;
+                      }}
                     />
                   </button>
 

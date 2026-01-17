@@ -1,22 +1,5 @@
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-
-// Cấu hình nơi lưu trữ file
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = 'uploads/claims/'; // Lưu vào thư mục riêng cho claims
-    // Tạo thư mục nếu chưa tồn tại
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    // Đặt tên file: fieldname-timestamp.ext
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-  }
-});
+import { storage } from '../config/cloudinary.js';
 
 // Bộ lọc file (chỉ chấp nhận ảnh và PDF)
 const fileFilter = (req, file, cb) => {

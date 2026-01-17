@@ -130,9 +130,10 @@ const AdminChatManager = () => {
               }`}
             >
               <img 
-                src={conv.user.avatar || "https://via.placeholder.com/40"} 
+                src={conv.user.avatar && conv.user.avatar.startsWith('http') ? conv.user.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(conv.user.name)}&background=random`} 
                 alt="Avatar" 
                 className="w-10 h-10 rounded-full object-cover"
+                onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(conv.user.name)}&background=random`; }}
               />
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-baseline">
@@ -156,7 +157,12 @@ const AdminChatManager = () => {
           <>
             {/* Chat Header */}
             <div className="p-4 bg-white border-b border-slate-200 flex items-center gap-3 shadow-sm">
-              <img src={selectedUser.avatar || "https://via.placeholder.com/40"} className="w-10 h-10 rounded-full" />
+              <img 
+                src={selectedUser.avatar && selectedUser.avatar.startsWith('http') ? selectedUser.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedUser.name)}&background=random`} 
+                className="w-10 h-10 rounded-full object-cover" 
+                alt="User"
+                onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedUser.name)}&background=random`; }}
+              />
               <div>
                 <h3 className="font-bold text-slate-800">{selectedUser.name}</h3>
                 <p className="text-xs text-slate-500">{selectedUser.email}</p>
