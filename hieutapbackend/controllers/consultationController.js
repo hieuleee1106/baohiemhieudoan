@@ -11,6 +11,10 @@ export const createConsultation = async (req, res) => {
       return res.status(400).json({ message: 'Vui lòng nhập Họ tên và Số điện thoại.' });
     }
 
+    if (!/^[0-9]{10}$/.test(customerPhone)) {
+      return res.status(400).json({ message: 'Số điện thoại phải có đúng 10 chữ số.' });
+    }
+
     const newRequest = await ConsultationRequest.create({
       customerName, customerPhone, customerEmail, product, note
     });

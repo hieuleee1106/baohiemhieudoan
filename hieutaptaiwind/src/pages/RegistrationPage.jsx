@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import { useAuth } from './AuthContext';
-
+// Trang đăng ký sản phẩm bảo hiểm
 const RegistrationPage = () => {
   const { productId } = useParams();
   const navigate = useNavigate();

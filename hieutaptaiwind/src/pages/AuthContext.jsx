@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { toast } from "sonner";
-
+// Tạo Context để quản lý xác thực người dùng và thông báo toàn cục
 const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {

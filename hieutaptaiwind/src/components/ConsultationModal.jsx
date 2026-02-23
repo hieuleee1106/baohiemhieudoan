@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../pages/AuthContext';
-
+// Modal để gửi yêu cầu tư vấn
 const ConsultationModal = ({ product, onClose }) => {
   const { showNotification } = useAuth();
   const [formData, setFormData] = useState({
@@ -12,11 +12,22 @@ const ConsultationModal = ({ product, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'customerPhone') {
+      setFormData({ ...formData, [name]: value.replace(/\D/g, '').slice(0, 10) }); // Chỉ cho phép nhập số và giới hạn 10
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.customerPhone.length !== 10) {
+      setError("Số điện thoại phải có đúng 10 chữ số.");
+      return;
+    }
+
     setIsSubmitting(true);
     setError('');
 
@@ -52,7 +63,7 @@ const ConsultationModal = ({ product, onClose }) => {
             {error && <p className="text-red-500 bg-red-100 p-2 rounded-md mb-4">{error}</p>}
             <div className="space-y-4">
               <input name="customerName" onChange={handleChange} placeholder="Họ và tên của bạn" className="p-3 border rounded w-full" required />
-              <input name="customerPhone" onChange={handleChange} placeholder="Số điện thoại" className="p-3 border rounded w-full" required />
+              <input name="customerPhone" value={formData.customerPhone} onChange={handleChange} placeholder="Số điện thoại (10 số)" className="p-3 border rounded w-full" required />
               <textarea name="note" onChange={handleChange} placeholder="Ghi chú thêm (nếu có)" className="p-3 border rounded w-full h-20" />
             </div>
             <div className="flex justify-end gap-4 mt-6">

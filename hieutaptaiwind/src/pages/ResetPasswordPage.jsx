@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Button from '../components/Button';
-
+// Trang đặt lại mật khẩu
 const ResetPasswordPage = () => {
   const { token } = useParams();
   const navigate = useNavigate();

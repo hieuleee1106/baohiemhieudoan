@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
-
+// Bố cục trang tổng quan dành cho Admin
 const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-amber-300 flex flex-col">

@@ -3,6 +3,7 @@ import Footer from '../components/Footer';
 import MyApplications from '../components/MyApplications';
 import HeroSlider from '../components/HeroSlider';
 import Chatbox from '../components/Chatbox';
+// Trang hiển thị các sản phẩm đã đăng ký bảo HIEEMR của người dùng
 const MyProductsPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">

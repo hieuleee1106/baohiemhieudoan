@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+// Modal form để thêm hoặc sửa nhân viên
 const StaffFormModal = ({ staff, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -32,13 +32,33 @@ const StaffFormModal = ({ staff, onClose, onSave }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'phone') {
+      const numericValue = value.replace(/\D/g, '');
+      setFormData((prev) => ({ ...prev, [name]: numericValue.slice(0, 10) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
+
+    // --- VALIDATION ---
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Vui lòng nhập địa chỉ email hợp lệ.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.phone && formData.phone.length !== 10) {
+      setError("Số điện thoại phải có đúng 10 chữ số.");
+      setIsSubmitting(false);
+      return;
+    }
+    // --- END VALIDATION ---
 
     const token = localStorage.getItem('hieushop-token');
     // Nếu có staff -> Đang sửa (PUT), ngược lại là Thêm mới (POST)
@@ -113,7 +133,7 @@ const StaffFormModal = ({ staff, onClose, onSave }) => {
             )}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Số điện thoại</label>
-              <input name="phone" value={formData.phone} onChange={handleChange} className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" />
+              <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phải đủ 10 số" className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none" />
             </div>
 
             {/* Thông tin công việc */}

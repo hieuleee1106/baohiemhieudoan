@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+// Component để hiển thị modal form sửa hợp đồng
 const ContractFormModal = ({ contract, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     user: '',

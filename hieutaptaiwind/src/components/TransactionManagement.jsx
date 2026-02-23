@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../pages/AuthContext';
-
+// Component để quản lý và hiển thị lịch sử giao dịch
 const TransactionManagement = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);

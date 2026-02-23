@@ -1,5 +1,5 @@
 import React from 'react';
-
+// Modal xác nhận hành động quan trọng như xóa
 const ConfirmModal = ({ isOpen, onClose, onConfirm, title, children, confirmText = "Xác nhận", isConfirming = false }) => {
   if (!isOpen) return null;
 

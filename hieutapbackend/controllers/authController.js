@@ -22,6 +22,16 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email đã được sử dụng" });
     }
 
+    if (phone) {
+      if (!/^[0-9]{10}$/.test(phone)) {
+        return res.status(400).json({ message: "Số điện thoại phải có đúng 10 chữ số" });
+      }
+      const existingPhone = await User.findOne({ phone });
+      if (existingPhone) {
+        return res.status(400).json({ message: "Số điện thoại đã được sử dụng" });
+      }
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -29,7 +39,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      phone: phone || "",
+      phone: phone || null,
     });
 
     res.status(201).json({
@@ -71,6 +81,17 @@ export const createStaff = async (req, res) => {
       return res.status(400).json({ message: "Email này đã được sử dụng." });
     }
 
+    // 2.1 Kiểm tra số điện thoại tồn tại (nếu có nhập)
+    if (phone) {
+      if (!/^[0-9]{10}$/.test(phone)) {
+        return res.status(400).json({ message: "Số điện thoại phải có đúng 10 chữ số" });
+      }
+      const existingPhone = await User.findOne({ phone });
+      if (existingPhone) {
+        return res.status(400).json({ message: "Số điện thoại này đã được sử dụng." });
+      }
+    }
+
     // 3. Tạo User với role là 'staff'
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -79,7 +100,7 @@ export const createStaff = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      phone: phone || "",
+      phone: phone || null,
       role: "staff", // Quan trọng: Gán quyền staff
     });
 

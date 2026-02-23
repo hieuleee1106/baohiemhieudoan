@@ -3,7 +3,7 @@ import { useAuth } from '../pages/AuthContext';
 import Button from './Button';
 import ConfirmModal from './ConfirmModal';
 import StaffFormModal from './StaffFormModal';
-
+// Component để quản lý các nhân viên hệ thống
 const StaffManagement = () => {
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);

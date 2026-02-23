@@ -5,7 +5,8 @@ import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import ConsultationModal from '../components/ConsultationModal';
 import Button from '../components/Button';
-
+import Chatbox from '../components/Chatbox';
+// Trang chi tiết sản phẩm bảo hiểm
 const ProductDetailPage = () => {
     const { productId } = useParams();
     const navigate = useNavigate();
@@ -89,9 +90,9 @@ const ProductDetailPage = () => {
                         </div>
 
                         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 -mt-2">{name}</h1>
-
+                        <p className="text-lg text-slate-600 leading-relaxed border-l-4 border-purple-500 pl-4 py-2 bg-purple-50 rounded">{description}</p>
                         <div>
-                            <p className="text-slate-500 text-lg">💰Chi phí tham gia từ</p>
+                            <p className="text-slate-500 text-lg">💰Chi phí tham gia chỉ từ</p>
                             <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">{price.toLocaleString('vi-VN')} ₫ <span className="text-2xl text-slate-500">/năm</span></p>
                         </div>
 
@@ -110,7 +111,7 @@ const ProductDetailPage = () => {
                         </div>
                         <div className="mt-6 border-t border-slate-200 pt-6 space-y-3 text-slate-600">
                             <p><strong>👥Đối tượng bảo hiểm:</strong> {insuredObject}</p>
-                            <p><strong>💵Số tiền bảo hiểm có thể nhận:</strong> <span className="font-bold text-purple-600">{annualInsurableAmount?.toLocaleString('vi-VN')} ₫/năm</span></p>
+                            <p><strong>💵Hạn mức chi trả tối đa:</strong> <span className="font-bold text-purple-600">{annualInsurableAmount?.toLocaleString('vi-VN')} ₫</span></p>
                             <p><strong>⏳Thời hạn bảo hiểm:</strong> {insuranceTerm}</p>
                         </div>
                         
@@ -153,6 +154,7 @@ const ProductDetailPage = () => {
                 )}
             </main>
             <Footer />
+            <Chatbox />
         </div>
     );
 };

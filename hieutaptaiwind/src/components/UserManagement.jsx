@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../pages/AuthContext';
 import Button from './Button';
 import ConfirmModal from './ConfirmModal';
-
+// Component để quản lý các người dùng hệ thống
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);

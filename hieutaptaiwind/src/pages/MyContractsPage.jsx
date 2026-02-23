@@ -3,6 +3,7 @@ import Footer from '../components/Footer';
 import MyContracts from '../components/MyContracts';
 import HeroSlider from '../components/HeroSlider';
 import Chatbox from '../components/Chatbox';
+// Trang hiển thị các hợp đồng của người dùng
 const MyContractsPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">

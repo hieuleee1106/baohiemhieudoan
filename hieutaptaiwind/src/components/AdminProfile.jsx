@@ -27,6 +27,18 @@ const AdminProfile = () => {
       return;
     }
 
+    // --- VALIDATION ---
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Vui lòng nhập địa chỉ email hợp lệ.");
+      return;
+    }
+
+    if (phone && phone.length !== 10) {
+      toast.error("Số điện thoại phải có đúng 10 chữ số.");
+      return;
+    }
+
     setLoading(true);
     try {
       const token = localStorage.getItem('hieushop-token');
@@ -105,9 +117,12 @@ const AdminProfile = () => {
             <input
               type="text"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, ""); // Chỉ giữ lại số
+                setPhone(value.slice(0, 10)); // Giới hạn 10 ký tự
+              }}
               className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Nhập số điện thoại"
+              placeholder="Phải đủ 10 số"
             />
           </div>
 

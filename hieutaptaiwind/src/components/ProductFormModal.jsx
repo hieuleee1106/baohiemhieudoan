@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+// Modal form để thêm hoặc sửa sản phẩm bảo hiểm
 const ProductFormModal = ({ product, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     name: '',

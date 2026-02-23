@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
-
+// Trang quên mật khẩu
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -11,6 +11,12 @@ const ForgotPasswordPage = () => {
     e.preventDefault();
     setMessage('');
     setError('');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Vui lòng nhập địa chỉ email hợp lệ.");
+      return;
+    }
 
     try {
       const response = await fetch('/api/auth/forgot-password', {

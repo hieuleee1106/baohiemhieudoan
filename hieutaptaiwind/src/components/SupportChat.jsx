@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 // Kết nối đến server backend (đảm bảo đúng port server đang chạy)
 const ENDPOINT = import.meta.env.VITE_BACKEND_URL || window.location.origin;
-
+// Component hỗ trợ chat trực tuyến giữa người dùng và nhân viên hỗ trợ
 const SupportChat = () => {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);

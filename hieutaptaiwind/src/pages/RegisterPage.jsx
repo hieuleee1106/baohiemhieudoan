@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Button from "../components/Button";
-
+// Trang đăng ký tài khoản người dùng
 const RegisterPage = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "", phone: "" });
   const [errors, setErrors] = useState({});
@@ -13,6 +13,17 @@ const RegisterPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     const newErrors = {};
+
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      newErrors.email = "Vui lòng nhập địa chỉ email hợp lệ.";
+    }
+
+    // Kiểm tra độ dài số điện thoại (nếu có nhập)
+    if (phone && phone.length !== 10) {
+      newErrors.phone = "Số điện thoại phải có đúng 10 chữ số.";
+    }
 
     // Kiểm tra mật khẩu
     if (password !== confirmPassword) {
@@ -59,7 +70,14 @@ const RegisterPage = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "phone") {
+      // Chỉ cho phép nhập số và giới hạn 10 ký tự
+      const numericValue = value.replace(/\D/g, "");
+      setFormData({ ...formData, [name]: numericValue.slice(0, 10) });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-red-50/30 p-4 relative overflow-hidden">
@@ -93,15 +111,16 @@ const RegisterPage = () => {
             className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
             required
           />
-          {errors.email && <p className="text-red-500 text-xs italic -mt-2 mb-4">{errors.email}</p>}
+          {errors.email && <p className="text-red-500 text-xs italic -mt-3 mb-4">{errors.email}</p>}
           <input
             type="tel"
             name="phone"
-            placeholder="Số điện thoại (không bắt buộc)"
+            placeholder="Số điện thoại (10 số)"
             value={phone}
             onChange={handleChange}
             className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
           />
+          {errors.phone && <p className="text-red-500 text-xs italic -mt-3 mb-4">{errors.phone}</p>}
           <input
             type="password"
             name="password"
@@ -111,7 +130,7 @@ const RegisterPage = () => {
             className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-4"
             required
           />
-          {errors.password && <p className="text-red-500 text-xs italic -mt-2 mb-4">{errors.password}</p>}
+          {errors.password && <p className="text-red-500 text-xs italic -mt-3 mb-4">{errors.password}</p>}
           <input
             type="password"
             name="confirmPassword"
@@ -121,8 +140,8 @@ const RegisterPage = () => {
             className="w-full border border-slate-200 bg-slate-50 rounded-xl p-3.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all mb-6"
             required
           />
-          {errors.confirmPassword && <p className="text-red-500 text-xs italic -mt-2 mb-4">{errors.confirmPassword}</p>}
-          {errors.general && <p className="text-red-500 text-xs italic mb-4">{errors.general}</p>}
+          {errors.confirmPassword && <p className="text-red-500 text-xs italic -mt-5 mb-4">{errors.confirmPassword}</p>}
+          {errors.general && <p className="text-red-500 text-sm text-center mb-4">{errors.general}</p>}
           <Button
             type="submit"
             variant="slide-red"

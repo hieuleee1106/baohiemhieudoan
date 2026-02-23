@@ -15,7 +15,7 @@ const ClaimRequestPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showNotification } = useAuth();
   const navigate = useNavigate();
-
+// Load hợp đồng của người dùng
   useEffect(() => {
     const fetchContracts = async () => {
       const token = localStorage.getItem('hieushop-token');

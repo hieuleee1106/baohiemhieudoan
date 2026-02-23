@@ -3,7 +3,7 @@ import { useAuth } from '../pages/AuthContext';
 import ContractFormModal from './ContractFormModal';
 import ConfirmModal from './ConfirmModal';
 import Button from './Button';
-
+// Component để quản lý các hợp đồng
 const ContractManagement = () => {
   const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);

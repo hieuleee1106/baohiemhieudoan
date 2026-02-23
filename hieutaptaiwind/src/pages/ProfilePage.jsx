@@ -31,6 +31,18 @@ const ProfilePage = () => {
     setError('');
     setPasswordError('');
 
+    // --- VALIDATION ---
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Vui lòng nhập địa chỉ email hợp lệ.");
+      return;
+    }
+
+    if (formData.phone && formData.phone.length !== 10) {
+      setError("Số điện thoại phải có đúng 10 chữ số.");
+      return;
+    }
+
     const updateFormData = new FormData();
     updateFormData.append('name', formData.name);
     updateFormData.append('email', formData.email);
@@ -128,6 +140,7 @@ const ProfilePage = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Hồ Sơ</span> Của Bạn
             </h1>
           </div>
+          {error && <p className="text-center text-red-500 bg-red-100 p-3 rounded-lg mb-4">{error}</p>}
           {isEditing ? (
             <form onSubmit={handleSave} className="space-y-6">
               <div>
@@ -140,7 +153,12 @@ const ProfilePage = () => {
               </div>
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-slate-600">Số điện thoại</label>
-                <input type="tel" id="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="mt-1 w-full border-2 border-slate-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                <input type="tel" id="phone" value={formData.phone} onChange={(e) => {
+                  const numericValue = e.target.value.replace(/\D/g, "");
+                  setFormData({ ...formData, phone: numericValue.slice(0, 10) });
+                }} 
+                placeholder="Phải đủ 10 số"
+                className="mt-1 w-full border-2 border-slate-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-600">Ảnh đại diện</label>

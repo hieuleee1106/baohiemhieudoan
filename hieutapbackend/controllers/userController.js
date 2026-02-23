@@ -11,7 +11,23 @@ export const updateUserProfile = async (req, res) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-      user.phone = req.body.phone || user.phone;
+      
+      // Validate phone format
+      if (req.body.phone) {
+        if (!/^[0-9]{10}$/.test(req.body.phone)) {
+          return res.status(400).json({ message: "Số điện thoại phải có đúng 10 chữ số" });
+        }
+        
+        // Check if phone already exists (for other users)
+        const existingPhone = await User.findOne({ phone: req.body.phone, _id: { $ne: req.user._id } });
+        if (existingPhone) {
+          return res.status(400).json({ message: "Số điện thoại này đã được sử dụng" });
+        }
+        
+        user.phone = req.body.phone;
+      } else {
+        user.phone = user.phone;
+      }
       
       if (req.body.password) {
         // Mã hóa mật khẩu trước khi lưu

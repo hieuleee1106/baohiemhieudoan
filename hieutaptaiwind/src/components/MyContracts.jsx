@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../pages/AuthContext'; // Import useAuth để lấy thông tin người dùng
 import Button from './Button';
 import ConfirmModal from './ConfirmModal';
-
+// Component để hiển thị và quản lý các hợp đồng của người dùng
 const MyContracts = () => {
   const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);

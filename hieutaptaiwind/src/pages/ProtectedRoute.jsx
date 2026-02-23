@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-
+// Component để bảo vệ các route yêu cầu xác thực và/hoặc quyền admin
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, loading } = useAuth();
   const location = useLocation();

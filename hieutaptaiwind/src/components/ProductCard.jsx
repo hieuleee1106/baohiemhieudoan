@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
-
+// Component thẻ sản phẩm bảo hiểm
 const ProductCard = ({ product }) => {
   const { name, description, price, imageUrl, category } = product;
   const navigate = useNavigate();

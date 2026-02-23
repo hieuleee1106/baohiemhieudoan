@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ConfirmModal from './ConfirmModal'; // Import modal xác nhận
 import { useAuth } from '../pages/AuthContext'; // Import để dùng showNotification
-
+// Component để hiển thị và quản lý các hồ sơ đăng ký của người dùng
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);

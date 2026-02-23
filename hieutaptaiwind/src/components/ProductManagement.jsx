@@ -3,7 +3,7 @@ import ProductFormModal from './ProductFormModal';
 import Button from './Button';
 import { useAuth } from '../pages/AuthContext';
 import ConfirmModal from './ConfirmModal';
-
+// Component để quản lý các sản phẩm bảo hiểm
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
